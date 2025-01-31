@@ -129,8 +129,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 261388192}
-  - component: {fileID: 261388191}
   - component: {fileID: 261388193}
+  - component: {fileID: 261388194}
   m_Layer: 0
   m_Name: WorldGen
   m_TagString: Untagged
@@ -138,20 +138,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &261388191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 261388190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e44ba9e10a6a87449d10924f3102025, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundTile: {fileID: 11400000, guid: f18a4b5f1078d6c4181b91f0718af016, type: 2}
-  tilemap: {fileID: 309562452}
 --- !u!4 &261388192
 Transform:
   m_ObjectHideFlags: 0
@@ -176,9 +162,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 261388190}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e44ba9e10a6a87449d10924f3102025, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grassTile: {fileID: 11400000, guid: 0986e763fb7eb1b4fbc33c5cbe7e7d94, type: 2}
+  dirtTile: {fileID: 11400000, guid: f18a4b5f1078d6c4181b91f0718af016, type: 2}
+  rockTile: {fileID: 11400000, guid: 2ff9fdf614dbbe9498871df754f0a7d1, type: 2}
+  tilemap: {fileID: 309562452}
+--- !u!114 &261388194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 261388190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 973732feb2b19bf408df12843aa52d3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldParams:
+    worldWidth: 40
+    worldDepth: 30
+    surfaceStart: 0
+    surfaceLimit: 0
+    undergroundLimit: 0
+    cavernLimit: 0
 --- !u!1 &309562449
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,25 +289,25 @@ Tilemap:
   m_TileMatrixArray:
   - m_RefCount: 0
     m_Data:
-      e00: -6.0078265e+19
+      e00: -1.8227262e+29
       e01: 0
-      e02: -4.5000076
-      e03: -4.5000076
-      e10: 5.44e-43
+      e02: -1.3224334e-38
+      e03: -1.3224334e-38
+      e10: 7.82e-43
       e11: 0
-      e12: 5.41e-43
-      e13: 5.41e-43
-      e20: -1.7550682e+34
-      e21: 1.0903647e-19
-      e22: 5.350324e-19
-      e23: 1.0903647e-19
+      e12: 7.79e-43
+      e13: 7.79e-43
+      e20: -2.509552e+35
+      e21: 1.0845206e-19
+      e22: 4.0305389e-19
+      e23: 1.0845206e-19
       e30: 4.5911e-41
-      e31: 5.45e-43
-      e32: 5.42e-43
-      e33: 5.45e-43
+      e31: 7.83e-43
+      e32: 7.8e-43
+      e33: 7.83e-43
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: 4.4567e-41, g: 4.4567e-41, b: 4.4567e-41, a: 4.4567e-41}
+    m_Data: {r: 3.5685e-41, g: 3.5685e-41, b: 3.5685e-41, a: 3.5685e-41}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}

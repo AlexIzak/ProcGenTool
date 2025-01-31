@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -5,7 +6,7 @@ using UnityEngine;
 
 public class WorldGen : MonoBehaviour
 {
-
+    [Serializable]
     public struct WorldParams
     {
         //Size,
@@ -23,29 +24,36 @@ public class WorldGen : MonoBehaviour
     
     public WorldParams worldParams;
 
-    int[] indices = { };
 
     public int[] GenerateTerrain()
     {
+        int arraySize = worldParams.worldWidth * worldParams.worldDepth;
+        int[] indices = new int[arraySize];
+        
         int index = 0;
 
         for (int i = 0; i < worldParams.worldWidth; ++i)
         {
             for (int j = 0; j < worldParams.worldDepth; ++j)
             {
-                spawnPos.x = i - worldParams.worldWidth / 2;
-                spawnPos.y = j - worldParams.worldDepth;
+                //spawnPos.x = i - worldParams.worldWidth / 2;
+                //spawnPos.y = j - worldParams.worldDepth;
 
+                int tileType;
 
                 //Take depth into account
                 // If y >= 0 - tile should be grass (account for hills - above 0)
+                //if(j == 0) tileType = 1; //Grass
 
                 // If y < 20 - entered underground - more rock
+                
 
                 // If y < 80 - entered underground - mostly rock, more ore
 
+                tileType = (j == 0) ? 1 : (j > 0) ? 2 : (j > 20) ? 3 : 0; // 1 - Grass / 2 - Dirt
+
                 //Store each value (decides the tile) in an array, index decides position
-                indices.SetValue(1, index);
+                indices.SetValue(tileType, index);
                 ++index;
 
                 //Option 1 - only stores location so I would have to figure out tile allocation after - simpler solution found
@@ -56,6 +64,7 @@ public class WorldGen : MonoBehaviour
                 //Option 2 - 2D array of values (used to decide tile type), the location can be derived from the indices of each value - Overkill
                 //int[,] world2 = { };
                 //world2.SetValue(1, indices);
+                //Debug.Log(index);
             }
         }
 
