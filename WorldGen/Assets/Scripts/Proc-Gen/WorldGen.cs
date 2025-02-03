@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class WorldGen : MonoBehaviour
 {
@@ -10,47 +11,43 @@ public class WorldGen : MonoBehaviour
     public struct WorldParams
     {
         //Size,
-        public int worldWidth;
-        public int worldDepth;
+        public int width;
+        public int depth;
 
         //depth of map (surface - 0 to 20, underground - 20 to 80, cavern - 80+)
         public int surfaceStart;
         public int surfaceLimit;
         public int undergroundLimit;
         public int cavernLimit;
+
+        public float heightValue, smoothness;
+        public float seed;
     }
     
     private Vector3Int spawnPos;
     
     public WorldParams worldParams;
 
+    [SerializeField] Tilemap tilemap;
+    [SerializeField] TileBase grassTile, dirtTile, rockTile;
 
     public int[] GenerateTerrain()
     {
-        int arraySize = worldParams.worldWidth * worldParams.worldDepth;
+        int arraySize = worldParams.width * worldParams.depth;
         int[] indices = new int[arraySize];
         
         int index = 0;
 
-        for (int i = 0; i < worldParams.worldWidth; ++i)
+        for (int x = 0; x < worldParams.width; ++x)
         {
-            for (int j = 0; j < worldParams.worldDepth; ++j)
+            for (int y = 0; y < worldParams.depth; ++y)
             {
-                //spawnPos.x = i - worldParams.worldWidth / 2;
-                //spawnPos.y = j - worldParams.worldDepth;
-
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 int tileType;
 
-                //Take depth into account
-                // If y >= 0 - tile should be grass (account for hills - above 0)
-                //if(j == 0) tileType = 1; //Grass
-
-                // If y < 20 - entered underground - more rock
-                
-
-                // If y < 80 - entered underground - mostly rock, more ore
-
-                tileType = (j == 0) ? 1 : (j > 0) ? 2 : (j > 20) ? 3 : 0; // 1 - Grass / 2 - Dirt
+                if (x == 0) tileType = 1;
+                else if(x < 20) tileType = 2;
+                else tileType = 3;
 
                 //Store each value (decides the tile) in an array, index decides position
                 indices.SetValue(tileType, index);
@@ -64,30 +61,57 @@ public class WorldGen : MonoBehaviour
                 //Option 2 - 2D array of values (used to decide tile type), the location can be derived from the indices of each value - Overkill
                 //int[,] world2 = { };
                 //world2.SetValue(1, indices);
-                //Debug.Log(index);
+                Debug.Log(new Vector2(x, y));
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
         }
 
-        ////Single value array will do
-        //int posX = 0;
-        //int posY = 0;
-
-        //for (int k = 0; k < indices.Length; ++k)
-        //{
-        //    if (k > 0) ++posX; //Ignore the first x increment
-
-        //    if (posX > worldParams.worldWidth) //When exceeding width
-        //    {
-        //        ++posY; //Go to the next line
-        //        posX = 0; //And start again - kinda like a typewriter when at the end of the page
-        //    }
-
-        //    Vector3Int pos = new Vector3Int(posX, posY, 0);
-        //    //return pos; //This would return every loop so it would have to run in a loop - not great
-        //    //If I return the array, I would have to just copy the array in a different container
-
         return indices;
     }
+
+    // Generating map using noise algorithms -------------------------------------------------------------------------------------------------
+    
+    void Noise()
+    {
+        for (int x = 0; x < worldParams.width; ++x)
+        {
+            worldParams.depth = Mathf.RoundToInt(worldParams.heightValue * Mathf.PerlinNoise(x / worldParams.smoothness, worldParams.seed));
+
+            int minStonePos = worldParams.depth - worldParams.cavernLimit;
+            int maxStonePos = worldParams.depth - worldParams.undergroundLimit;
+            int totalStone = Mathf.RoundToInt(worldParams.heightValue/2 * Mathf.PerlinNoise(x / worldParams.smoothness, worldParams.seed));
+
+            for (int y = 0; y < worldParams.depth; ++y)
+            {
+                if(y < totalStone) tilemap.SetTile(new Vector3Int(x, y, 0), rockTile);
+                else tilemap.SetTile(new Vector3Int(x, y, 0), dirtTile);
+
+                if (totalStone == worldParams.depth) tilemap.SetTile(new Vector3Int(x, y, 0), rockTile);
+                //else tilemap.SetTile(new Vector3Int(x, y, 0), grassTile);
+            }
+        }
+    }
+
+    private void Start()
+    {
+        worldParams.seed = UnityEngine.Random.Range(-100000, 100000);
+        Noise();
+    }
+
+    private void Update()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            worldParams.seed = UnityEngine.Random.Range(-100000, 100000);
+            Noise();
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            tilemap.ClearAllTiles();
+        }
+    }
+
+    // Generating map using noise algorithms -------------------------------------------------------------------------------------------------
 
     void GenerateCaves()
     {
