@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -17,11 +18,16 @@ public class WorldGen : MonoBehaviour
         //depth of map (surface - 0 to 20, underground - 20 to 80, cavern - 80+)
         public int surfaceStart;
         public int surfaceLimit;
-        public int undergroundLimit;
         public int cavernLimit;
 
-        public float heightValue, smoothness;
         public float seed;
+
+        [Range(0f, 500f)]
+        public float smoothness;
+        [Range(0f, 500f)]
+        public int undergroundLimit;
+        [Range(0f, 500f)]
+        public float heightValue;
     }
     
     private Vector3Int spawnPos;
@@ -71,15 +77,20 @@ public class WorldGen : MonoBehaviour
 
     // Generating map using noise algorithms -------------------------------------------------------------------------------------------------
     
-    void Noise()
+    void Generate()
     {
+
+        //TODO - Create scriptable objects that have their own function to make biomes
         for (int x = 0; x < worldParams.width; ++x)
         {
             worldParams.depth = Mathf.RoundToInt(worldParams.heightValue * Mathf.PerlinNoise(x / worldParams.smoothness, worldParams.seed));
 
+            //noise.pnoise
+            //noise.cellular
+
             int minStonePos = worldParams.depth - worldParams.cavernLimit;
             int maxStonePos = worldParams.depth - worldParams.undergroundLimit;
-            int totalStone = Mathf.RoundToInt(worldParams.heightValue/2 * Mathf.PerlinNoise(x / worldParams.smoothness, worldParams.seed));
+            int totalStone = Mathf.RoundToInt(worldParams.undergroundLimit * Mathf.PerlinNoise(x / worldParams.smoothness, worldParams.seed));
 
             for (int y = 0; y < worldParams.depth; ++y)
             {
@@ -95,7 +106,7 @@ public class WorldGen : MonoBehaviour
     private void Start()
     {
         worldParams.seed = UnityEngine.Random.Range(-100000, 100000);
-        Noise();
+        Generate();
     }
 
     private void Update()
@@ -103,7 +114,7 @@ public class WorldGen : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             worldParams.seed = UnityEngine.Random.Range(-100000, 100000);
-            Noise();
+            Generate();
         }
         else if (Input.GetMouseButtonDown(1))
         {
