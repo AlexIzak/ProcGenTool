@@ -1,0 +1,25 @@
+void GenerateCave()
+{
+	//Pick a position at random
+	Vector2 caveOrigin = new Vector2(rand(x), rand(y));
+	
+	//Hollow out the cave
+	//Calculate circle radius using perlin noise
+	for(int i = 0; i < radius * 2; i++)
+	{
+		for(int j = 0; j < radius * 2; i++)
+		{
+			//Remove the existing tiles along the radius calculated
+		}
+	}
+	
+	GenerateCorridors();
+}
+
+void GenerateCorridors()
+{
+	//Use cellular noise to generate cell-like patterns
+	//The outside of the cells will be treated as the corridors
+	//Remove extra tiles along the corridors to allow traversal space
+}
+
