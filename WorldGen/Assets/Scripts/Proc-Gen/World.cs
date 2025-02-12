@@ -24,7 +24,7 @@ public class World : MonoBehaviour
 
         worldGen = GetComponent<WorldGen>();
 
-        map = worldGen.GenerateTerrain();
+        //map = worldGen.GenerateTerrain();
 
         //Single value array will do
         int posX = 0;

@@ -37,47 +37,9 @@ public class WorldGen : MonoBehaviour
     [SerializeField] Tilemap tilemap;
     [SerializeField] TileBase grassTile, dirtTile, rockTile;
 
-    public int[] GenerateTerrain()
-    {
-        int arraySize = worldParams.width * worldParams.depth;
-        int[] indices = new int[arraySize];
-        
-        int index = 0;
-
-        for (int x = 0; x < worldParams.width; ++x)
-        {
-            for (int y = 0; y < worldParams.depth; ++y)
-            {
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                int tileType;
-
-                if (x == 0) tileType = 1;
-                else if(x < 20) tileType = 2;
-                else tileType = 3;
-
-                //Store each value (decides the tile) in an array, index decides position
-                indices.SetValue(tileType, index);
-                ++index;
-
-                //Option 1 - only stores location so I would have to figure out tile allocation after - simpler solution found
-                //Vector2[] world = { };
-                //world.SetValue(new Vector2(spawnPos.x, spawnPos.y), index);
-                //index++;
-
-                //Option 2 - 2D array of values (used to decide tile type), the location can be derived from the indices of each value - Overkill
-                //int[,] world2 = { };
-                //world2.SetValue(1, indices);
-                Debug.Log(new Vector2(x, y));
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            }
-        }
-
-        return indices;
-    }
-
     // Generating map using noise algorithms -------------------------------------------------------------------------------------------------
     
-    void Generate()
+    void GenerateTerrain()
     {
 
         //TODO - Create scriptable objects that have their own function to make biomes
@@ -99,6 +61,26 @@ public class WorldGen : MonoBehaviour
 
                 if (totalStone == worldParams.depth) tilemap.SetTile(new Vector3Int(x, y, 0), rockTile);
                 //else tilemap.SetTile(new Vector3Int(x, y, 0), grassTile);
+
+                //MixTiles();
+            }
+        }
+    }
+
+    void MixTiles()
+    {
+        for (int x = 0; x < worldParams.width; ++x)
+        {
+            for (int y = 0; y < worldParams.depth; ++y)
+            {
+                float switchChance = Mathf.PerlinNoise(x, y);
+
+                if (switchChance > 0.5f)
+                {
+                    if (tilemap.GetTile(new Vector3Int(x, y, 0)) == dirtTile)
+                        tilemap.SetTile(new Vector3Int(x, y, 0), rockTile);
+                    else tilemap.SetTile(new Vector3Int(x, y, 0), dirtTile);
+                }
             }
         }
     }
@@ -106,7 +88,7 @@ public class WorldGen : MonoBehaviour
     private void Start()
     {
         worldParams.seed = UnityEngine.Random.Range(-100000, 100000);
-        Generate();
+        GenerateTerrain();
     }
 
     private void Update()
@@ -114,7 +96,7 @@ public class WorldGen : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             worldParams.seed = UnityEngine.Random.Range(-100000, 100000);
-            Generate();
+            GenerateTerrain();
         }
         else if (Input.GetMouseButtonDown(1))
         {
