@@ -45,7 +45,8 @@ public class WorldGen : MonoBehaviour
         //TODO - Create scriptable objects that have their own function to make biomes
         for (int x = 0; x < worldParams.width; ++x)
         {
-            worldParams.depth = Mathf.RoundToInt(worldParams.heightValue * Mathf.PerlinNoise(x / worldParams.smoothness, worldParams.seed));
+            float p = Mathf.PerlinNoise((float)x / worldParams.smoothness, worldParams.seed);
+            worldParams.depth = Mathf.RoundToInt(worldParams.heightValue * p);
 
             //noise.pnoise
             //noise.cellular
@@ -62,27 +63,29 @@ public class WorldGen : MonoBehaviour
                 if (totalStone == worldParams.depth) tilemap.SetTile(new Vector3Int(x, y, 0), rockTile);
                 //else tilemap.SetTile(new Vector3Int(x, y, 0), grassTile);
 
-                //MixTiles();
+                MixTiles(x, y);
             }
         }
     }
 
-    void MixTiles()
+    void MixTiles(int x, int y)
     {
-        for (int x = 0; x < worldParams.width; ++x)
-        {
-            for (int y = 0; y < worldParams.depth; ++y)
-            {
-                float switchChance = Mathf.PerlinNoise(x, y);
+        // for (int x = 0; x < worldParams.width; ++x)
+        // {
+        // for (int y = 0; y < worldParams.depth; ++y)
+        //  {
 
-                if (switchChance > 0.5f)
-                {
-                    if (tilemap.GetTile(new Vector3Int(x, y, 0)) == dirtTile)
-                        tilemap.SetTile(new Vector3Int(x, y, 0), rockTile);
-                    else tilemap.SetTile(new Vector3Int(x, y, 0), dirtTile);
-                }
-            }
+        //float switchChance = Mathf.PerlinNoise(x / 50f, 3000); - Checkerboard pattern
+        float switchChance = Mathf.PerlinNoise(16f, 0.0625f); //TODO - Get the resulting value to fluctuate for each tile - atm it fluctuates too rarely
+
+        if (switchChance > 0.4f)
+        {
+            if (tilemap.GetTile(new Vector3Int(x, y, 0)) == dirtTile)
+                tilemap.SetTile(new Vector3Int(x, y, 0), rockTile);
+            else tilemap.SetTile(new Vector3Int(x, y, 0), dirtTile);
         }
+        // }
+        // }
     }
 
     private void Start()
