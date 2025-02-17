@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class WorldGen : MonoBehaviour
+public class SurfaceGen : MonoBehaviour
 {
     [Serializable]
     public struct WorldParams
@@ -27,7 +27,7 @@ public class WorldGen : MonoBehaviour
         [Range(0f, 500f)]
         public int undergroundLimit;
         [Range(0f, 500f)]
-        public float heightValue;
+        public float heightValue, blendStrength;
     }
     
     private Vector3Int spawnPos;
@@ -45,7 +45,7 @@ public class WorldGen : MonoBehaviour
         //TODO - Create scriptable objects that have their own function to make biomes
         for (int x = 0; x < worldParams.width; ++x)
         {
-            float p = Mathf.PerlinNoise((float)x / worldParams.smoothness, worldParams.seed);
+            float p = Mathf.PerlinNoise(x / worldParams.smoothness, worldParams.seed);
             worldParams.depth = Mathf.RoundToInt(worldParams.heightValue * p);
 
             //noise.pnoise
@@ -76,7 +76,7 @@ public class WorldGen : MonoBehaviour
         //  {
 
         //float switchChance = Mathf.PerlinNoise(x / 50f, 3000); - Checkerboard pattern
-        float switchChance = Mathf.PerlinNoise(16f, 0.0625f); //TODO - Get the resulting value to fluctuate for each tile - atm it fluctuates too rarely
+        float switchChance = Mathf.PerlinNoise(x/ worldParams.blendStrength, worldParams.seed); //TODO - Get the resulting value to fluctuate for each tile - atm it fluctuates too rarely
 
         if (switchChance > 0.4f)
         {

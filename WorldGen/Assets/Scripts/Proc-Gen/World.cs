@@ -12,7 +12,7 @@ public class World : MonoBehaviour
 
     [SerializeField] Tilemap tilemap;
 
-    private WorldGen worldGen;
+    private SurfaceGen worldGen;
     private int[] map;
     private Vector3Int spawnPos;
     private TileBase spawnTile;
@@ -22,7 +22,7 @@ public class World : MonoBehaviour
     {
         Debug.Log("Running!");
 
-        worldGen = GetComponent<WorldGen>();
+        worldGen = GetComponent<SurfaceGen>();
 
         //map = worldGen.GenerateTerrain();
 
