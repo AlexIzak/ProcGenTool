@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static SurfaceGen;
 
 public class UndergroundGen : MonoBehaviour
 {
@@ -13,14 +14,16 @@ public class UndergroundGen : MonoBehaviour
     public TileBase dirt;
     public TileBase rock;
 
-    int width = 160;
-    int height = 90;
+    [SerializeField] int width = 160;
+    [SerializeField] int height = 90;
 
     [Range(4.0f, 20.0f)] //Recommended range
-    float magnification = 7.0f;
+    [SerializeField] float magnification = 7.0f;
 
-    int xOffset = 0;
-    int yOffset = 0;
+    [SerializeField] int xOffset = 0;
+    [SerializeField] int yOffset = 0;
+
+    int seed = 0;
 
     List<List<int>> noiseGrid = new List<List<int>>();
     List<List<TileBase>> tileGrid = new List<List<TileBase>>();
@@ -28,6 +31,8 @@ public class UndergroundGen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        seed = UnityEngine.Random.Range(-100000, 100000);
+
         CreateTileset();
         CreateTilemapGroups();
         GenerateUnderground();
@@ -81,7 +86,7 @@ public class UndergroundGen : MonoBehaviour
 
     private int GetIDwithPerlinNoise(int x, int y)
     {
-        float rawPerlin = Mathf.PerlinNoise( (x - xOffset) / magnification,
+        float rawPerlin = Mathf.PerlinNoise((x - xOffset) / magnification,
             (y - yOffset) / magnification);
 
         float clampPerlin = Mathf.Clamp(rawPerlin, 0.0f, 1.0f);
@@ -96,6 +101,25 @@ public class UndergroundGen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetMouseButtonDown(0))
+        {
+            CreateTileset();
+            CreateTilemapGroups();
+            GenerateUnderground();
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            //tilemap.ClearAllTiles();
+            ClearMap();
+        }
+    }
+
+    private void ClearMap()
+    {
+        foreach(var group in tileGroups)
+        {
+            group.Value.GetComponent<Tilemap>().ClearAllTiles();
+            Destroy(group.Value);
+        }
     }
 }

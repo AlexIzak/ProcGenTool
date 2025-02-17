@@ -493,6 +493,11 @@ MonoBehaviour:
   hollow: {fileID: 11400000, guid: 0986e763fb7eb1b4fbc33c5cbe7e7d94, type: 2}
   dirt: {fileID: 11400000, guid: f18a4b5f1078d6c4181b91f0718af016, type: 2}
   rock: {fileID: 11400000, guid: 2ff9fdf614dbbe9498871df754f0a7d1, type: 2}
+  width: 160
+  height: 90
+  magnification: 7
+  xOffset: 0
+  yOffset: 0
 --- !u!156049354 &1339980185
 Grid:
   m_ObjectHideFlags: 0
