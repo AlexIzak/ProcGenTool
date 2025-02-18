@@ -28,10 +28,21 @@ public class UndergroundGen : MonoBehaviour
     List<List<int>> noiseGrid = new List<List<int>>();
     List<List<TileBase>> tileGrid = new List<List<TileBase>>();
 
+    //Background
+    [SerializeField] SpriteRenderer bgWall;
+
     // Start is called before the first frame update
     void Start()
     {
-        seed = UnityEngine.Random.Range(-100000, 100000);
+        xOffset = UnityEngine.Random.Range(-20, 20);
+        yOffset = UnityEngine.Random.Range(-20, 20);
+
+        float xPos = width / 2;
+        float YPos = height / 2;
+
+        Instantiate(bgWall, new Vector3(xPos, YPos, 1), Quaternion.identity);
+        bgWall.drawMode = SpriteDrawMode.Tiled;
+        bgWall.size = new Vector2(width, height);
 
         CreateTileset();
         CreateTilemapGroups();
@@ -86,8 +97,10 @@ public class UndergroundGen : MonoBehaviour
 
     private int GetIDwithPerlinNoise(int x, int y)
     {
-        float rawPerlin = Mathf.PerlinNoise((x - xOffset) / magnification,
-            (y - yOffset) / magnification);
+        float perlinX = (x - xOffset) / magnification;
+        float perlinY = (y - yOffset) / magnification;
+
+        float rawPerlin = Mathf.PerlinNoise(perlinX, perlinY);
 
         float clampPerlin = Mathf.Clamp(rawPerlin, 0.0f, 1.0f);
 
@@ -103,6 +116,9 @@ public class UndergroundGen : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            xOffset = UnityEngine.Random.Range(-20, 20);
+            yOffset = UnityEngine.Random.Range(-20, 20);
+
             CreateTileset();
             CreateTilemapGroups();
             GenerateUnderground();
@@ -121,5 +137,7 @@ public class UndergroundGen : MonoBehaviour
             group.Value.GetComponent<Tilemap>().ClearAllTiles();
             Destroy(group.Value);
         }
+
+        //Destroy(bgWall.gameObject);
     }
 }
