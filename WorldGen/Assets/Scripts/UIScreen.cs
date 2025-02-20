@@ -23,6 +23,11 @@ public class UIScreen : MonoBehaviour
         }
     }
 
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
     public void Close()
     {
         gameObject.GetComponent<Canvas>().enabled = false;
