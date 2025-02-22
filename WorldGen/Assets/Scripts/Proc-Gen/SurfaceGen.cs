@@ -76,7 +76,7 @@ public class SurfaceGen : MonoBehaviour
         //  {
 
         //float switchChance = Mathf.PerlinNoise(x / 50f, 3000); - Checkerboard pattern
-        float switchChance = Mathf.PerlinNoise(x/ worldParams.blendStrength, y / worldParams.blendStrength); //TODO - Get the resulting value to fluctuate for each tile - atm it fluctuates too rarely
+        float switchChance = Mathf.PerlinNoise(x/ worldParams.blendStrength, y / worldParams.blendStrength);
 
         if (switchChance > 0.4f)
         {

@@ -30,13 +30,13 @@ public class UndergroundGen : MonoBehaviour
     [SerializeField] int yOffset = 0;
 
     List<List<int>> noiseGrid = new List<List<int>>();
-    List<List<TileBase>> tileGrid = new List<List<TileBase>>();
+    List<List<TileHelper>> tileGrid = new List<List<TileHelper>>();
 
     //Background
     [SerializeField] SpriteRenderer bgWall;
 
     [Serializable]
-    public struct WorldParams
+    public struct SurfaceParams
     {
         //Size,
         public int width;
@@ -54,7 +54,7 @@ public class UndergroundGen : MonoBehaviour
     }
 
     [SerializeField]
-    private WorldParams worldParams;
+    private SurfaceParams surfaceParams;
 
     // Start is called before the first frame update
     void Start()
@@ -99,18 +99,18 @@ public class UndergroundGen : MonoBehaviour
 
     private void GenerateSurface()
     {
-        worldParams.seed = UnityEngine.Random.Range(-100000, 100000);
+        surfaceParams.seed = UnityEngine.Random.Range(-100000, 100000);
 
         //TODO - Create scriptable objects that have their own function to make biomes
-        for (int x = 0; x < worldParams.width; ++x)
+        for (int x = 0; x < surfaceParams.width; ++x)
         {
-            float p = Mathf.PerlinNoise(x / worldParams.smoothness, worldParams.seed);
-            worldParams.depth = Mathf.RoundToInt(worldParams.heightValue * p + 90f);
+            float p = Mathf.PerlinNoise(x / surfaceParams.smoothness, surfaceParams.seed);
+            surfaceParams.depth = Mathf.RoundToInt(surfaceParams.heightValue * p + 90f);
 
             //noise.pnoise
             //noise.cellular
 
-            for (int y = 90; y < worldParams.depth; ++y)
+            for (int y = 90; y < surfaceParams.depth; ++y)
             {
                 tileGroups[2].GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), tileset[2]);
             }
@@ -119,11 +119,10 @@ public class UndergroundGen : MonoBehaviour
 
     private void GenerateUnderground()
     {
-        //TODO Add surface generation
         for (int x = 0; x < width; x++)
         {
             noiseGrid.Add(new List<int>());
-            tileGrid.Add(new List<TileBase>());
+            tileGrid.Add(new List<TileHelper>());
 
             for (int y = 0; y < height; y++)
             {
@@ -136,9 +135,13 @@ public class UndergroundGen : MonoBehaviour
 
     private void CreateTile(int tileID, int x, int y)
     {
-        TileBase tile = tileset[tileID];
+        TileHelper tile = ScriptableObject.CreateInstance<TileHelper>();
+        tile.tileBase = tileset[tileID];
         GameObject tilemap = tileGroups[tileID];
-        tilemap.GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), tile);
+        tilemap.GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), tile.tileBase);
+        tile.SetPos(x, y);
+
+        //TODO Set neighbouring tiles
     }
 
     private int GetIDwithPerlinNoise(int x, int y)
@@ -179,6 +182,7 @@ public class UndergroundGen : MonoBehaviour
         CreateTilemapGroups();
         GenerateUnderground();
         GenerateSurface();
+        GenerateCave();
     }
 
     public void SetData(int tileID)
@@ -222,5 +226,28 @@ public class UndergroundGen : MonoBehaviour
         }
 
         //Destroy(bgWall.gameObject);
+    }
+
+    void GenerateCave()
+    {
+        //int radius = Mathf.FloorToInt((surfaceParams.width / 4) * Mathf.PerlinNoise(surfaceParams.width / 2f, surfaceParams.seed));
+        int radius = 5;
+
+        //TODO Generate random cave origin, but don't have them too close toghether
+        Vector2 center = new Vector2(40, 40);
+
+        for (int x = -radius; x < radius; x++)
+        {
+            //Improve noise generation
+            radius = Mathf.FloorToInt((surfaceParams.width / 5) * Mathf.PerlinNoise((x - xOffset) / magnification, surfaceParams.seed));
+            for (int y = -radius; y < radius; y++)
+            {
+                if(x*x + y*y <= radius*radius)
+                {
+                    tileGroups[1].GetComponent<Tilemap>().SetTile(new Vector3Int((int)center.x + x, (int)center.y + y, 0), tileset[0]);
+                    tileGroups[2].GetComponent<Tilemap>().SetTile(new Vector3Int((int)center.x + x, (int)center.y + y, 0), tileset[0]);
+                }
+            }
+        }
     }
 }
