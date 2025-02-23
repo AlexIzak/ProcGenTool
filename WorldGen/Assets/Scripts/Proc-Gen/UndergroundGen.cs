@@ -32,6 +32,9 @@ public class UndergroundGen : MonoBehaviour
     List<List<int>> noiseGrid = new List<List<int>>();
     List<List<TileHelper>> tileGrid = new List<List<TileHelper>>();
 
+    [SerializeField]
+    Tilemap map;
+
     //Background
     [SerializeField] SpriteRenderer bgWall;
 
@@ -55,6 +58,9 @@ public class UndergroundGen : MonoBehaviour
 
     [SerializeField]
     private SurfaceParams surfaceParams;
+
+    [SerializeField]
+    CaveGen cave;
 
     // Start is called before the first frame update
     void Start()
@@ -112,7 +118,8 @@ public class UndergroundGen : MonoBehaviour
 
             for (int y = 90; y < surfaceParams.depth; ++y)
             {
-                tileGroups[2].GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), tileset[2]);
+                //tileGroups[2].GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), tileset[2]);
+                map.SetTile(new Vector3Int(x, y, 0), tileset[2]);
             }
         }
     }
@@ -137,8 +144,9 @@ public class UndergroundGen : MonoBehaviour
     {
         TileHelper tile = ScriptableObject.CreateInstance<TileHelper>();
         tile.tileBase = tileset[tileID];
-        GameObject tilemap = tileGroups[tileID];
-        tilemap.GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), tile.tileBase);
+        //GameObject tilemap = tileGroups[tileID];
+        //tilemap.GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), tile.tileBase);
+        map.SetTile(new Vector3Int(x, y, 0), tile.tileBase);
         tile.SetPos(x, y);
 
         //TODO Set neighbouring tiles
@@ -169,8 +177,8 @@ public class UndergroundGen : MonoBehaviour
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            //tilemap.ClearAllTiles();
-            ClearMap();
+            map.ClearAllTiles();
+            //ClearMap();
         }
     }
 
@@ -179,13 +187,17 @@ public class UndergroundGen : MonoBehaviour
         xOffset = UnityEngine.Random.Range(-20, 20);
         yOffset = UnityEngine.Random.Range(-20, 20);
 
-        CreateTilemapGroups();
+        //CreateTilemapGroups();
         GenerateUnderground();
         GenerateSurface();
-        GenerateCave();
+        //GenerateCave();
+
+        //Tilemap caveTilemap = tileGroups[1].GetComponent<Tilemap>();
+
+        cave.GenerateCave(width / 4, height / 3, map, average);
     }
 
-    public void SetData(int tileID)
+    public void SetData(int tileID) //Only swaps 1 tile because I can't access it in editor once I add 2 parameters
     {
         tileset.Remove(0);
 
@@ -211,7 +223,7 @@ public class UndergroundGen : MonoBehaviour
         Debug.Log(tileID);
     }
 
-    public void SwapTile(int tilesetID)
+    public void SwapTile(int tilesetID) //For the UI that changes the tiles - doesnt work 
     {
         tileset.Remove(tilesetID);
         tileset.Add(tilesetID, average);
@@ -228,13 +240,16 @@ public class UndergroundGen : MonoBehaviour
         //Destroy(bgWall.gameObject);
     }
 
+    /** Ignore for now
     void GenerateCave()
     {
         //int radius = Mathf.FloorToInt((surfaceParams.width / 4) * Mathf.PerlinNoise(surfaceParams.width / 2f, surfaceParams.seed));
         int radius = 5;
 
         //TODO Generate random cave origin, but don't have them too close toghether
-        Vector2 center = new Vector2(40, 40);
+        int randX = UnityEngine.Random.Range(20, width - 20);
+        int randY = UnityEngine.Random.Range(20, height - 20);
+        Vector2 center = new Vector2(randX, randY);
 
         for (int x = -radius; x < radius; x++)
         {
@@ -249,5 +264,5 @@ public class UndergroundGen : MonoBehaviour
                 }
             }
         }
-    }
+    }**/
 }
