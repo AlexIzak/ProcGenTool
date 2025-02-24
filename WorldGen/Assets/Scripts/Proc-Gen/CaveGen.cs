@@ -17,23 +17,22 @@ public class CaveGen : MonoBehaviour
 
     int[,] cave;
 
-    //TODO Add origin point so it can be set to different locations
-    public void GenerateCave(int width, int height, Tilemap tilemap, TileBase hollow)
+    public void GenerateCave(int width, int height, Vector2 originPoint, Tilemap tilemap, TileBase hollow)
     {
-        this.width = width;
-        this.height = height;
-        cave = new int[width, height];
-        RandomFillCave();
+        this.width = (int)originPoint.x + width;
+        this.height = (int)originPoint.y + height;
+        cave = new int[this.width, this.height];
+        RandomFillCave(originPoint);
 
         for (int i = 0; i < 5; i++)
         {
-            SmoothCave();
+            SmoothCave(originPoint);
         }
 
-        DrawCave(tilemap, hollow);
+        DrawCave(originPoint, tilemap, hollow);
     }
 
-    private void RandomFillCave()
+    private void RandomFillCave(Vector2 pos)
     {
         if (useRandomSeed)
         {
@@ -42,9 +41,9 @@ public class CaveGen : MonoBehaviour
 
         System.Random pseudoRandom = new System.Random(seed);
 
-        for (int x = 0; x < width; x++)
+        for (int x = (int)pos.x; x < width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = (int)pos.y; y < height; y++)
             {
                 if(x == 0 || x == width - 1 || y == 0 || y == height - 1)
                 {
@@ -55,13 +54,13 @@ public class CaveGen : MonoBehaviour
         }
     }
 
-    void SmoothCave()
+    public void SmoothCave(Vector2 pos)
     {
-        for (int x = 0; x < width; x++)
+        for (int x = (int)pos.x; x < width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = (int)pos.y; y < height; y++)
             {
-                int neighbourWallTiles = GetSurroundingWallCount(x, y);
+                int neighbourWallTiles = GetSurroundingWallCount(x, y, pos);
 
                 if (neighbourWallTiles > 4) cave[x, y] = 1;
 
@@ -70,15 +69,16 @@ public class CaveGen : MonoBehaviour
         }
     }
 
-    int GetSurroundingWallCount(int gridX, int gridY)
+    int GetSurroundingWallCount(int gridX, int gridY, Vector2 pos)
     {
         int wallCount = 0;
 
+        //Check a 3 by 3 grid around a tile
         for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++)
         {
             for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++)
             {
-                if(neighbourX >= 0 && neighbourX < width &&  neighbourY >= 0 && neighbourY < height) //Check we are within the cave bounds
+                if(neighbourX >= pos.x && neighbourX < width &&  neighbourY >= pos.y && neighbourY < height) //Check we are within the cave bounds
                 {
                     if (neighbourX != gridX || neighbourY != gridY) wallCount += cave[neighbourX, neighbourY]; //If the tile = 1 (wall) add it to the count
                 }
@@ -89,11 +89,11 @@ public class CaveGen : MonoBehaviour
         return wallCount;
     }
 
-    void DrawCave(Tilemap tilemap, TileBase hollow)
+    void DrawCave(Vector2 pos, Tilemap tilemap, TileBase hollow)
     {
-        for (int x = 0; x < width; x++)
+        for (int x = (int)pos.x; x < width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = (int)pos.y; y < height; y++)
             {
                 if (cave[x, y] == 0) tilemap.SetTile(new Vector3Int(x, y, 0), hollow);
             }

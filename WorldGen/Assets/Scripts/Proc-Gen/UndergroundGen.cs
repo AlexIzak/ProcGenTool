@@ -111,12 +111,12 @@ public class UndergroundGen : MonoBehaviour
         for (int x = 0; x < surfaceParams.width; ++x)
         {
             float p = Mathf.PerlinNoise(x / surfaceParams.smoothness, surfaceParams.seed);
-            surfaceParams.depth = Mathf.RoundToInt(surfaceParams.heightValue * p + 90f);
+            surfaceParams.depth = Mathf.RoundToInt(surfaceParams.heightValue * p + (float)height);
 
             //noise.pnoise
             //noise.cellular
 
-            for (int y = 90; y < surfaceParams.depth; ++y)
+            for (int y = height; y < surfaceParams.depth; ++y)
             {
                 //tileGroups[2].GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), tileset[2]);
                 map.SetTile(new Vector3Int(x, y, 0), tileset[2]);
@@ -149,7 +149,7 @@ public class UndergroundGen : MonoBehaviour
         map.SetTile(new Vector3Int(x, y, 0), tile.tileBase);
         tile.SetPos(x, y);
 
-        //TODO Set neighbouring tiles
+        //TODO Set neighbouring tiles - in a separate function that loops through the complete map
     }
 
     private int GetIDwithPerlinNoise(int x, int y)
@@ -194,7 +194,23 @@ public class UndergroundGen : MonoBehaviour
 
         //Tilemap caveTilemap = tileGroups[1].GetComponent<Tilemap>();
 
-        cave.GenerateCave(width / 4, height / 3, map, average);
+        //Cave Gen
+        //TODO Multiple caves to spawning - need to consider making them not overlap and their scaling with map (might be too big)
+        int caveCount = 2;
+
+        int caveWidth = width / 4;
+        int caveHeight = height / 3;
+
+        for (int i = 0; i < caveCount; i++)
+        {
+            int xPos = UnityEngine.Random.Range(10, width - caveWidth);
+            int yPos = UnityEngine.Random.Range(10, height - caveHeight);
+            Vector2 caveOrigin = new Vector2(xPos, yPos);
+
+            cave.GenerateCave(caveWidth, caveHeight, caveOrigin, map, average);
+        }
+
+        //cave.GenerateCave(caveWidth, caveHeight, caveOrigin, map, average);
     }
 
     public void SetData(int tileID) //Only swaps 1 tile because I can't access it in editor once I add 2 parameters
@@ -246,7 +262,7 @@ public class UndergroundGen : MonoBehaviour
         //int radius = Mathf.FloorToInt((surfaceParams.width / 4) * Mathf.PerlinNoise(surfaceParams.width / 2f, surfaceParams.seed));
         int radius = 5;
 
-        //TODO Generate random cave origin, but don't have them too close toghether
+        // Generate random cave origin, but don't have them too close toghether
         int randX = UnityEngine.Random.Range(20, width - 20);
         int randY = UnityEngine.Random.Range(20, height - 20);
         Vector2 center = new Vector2(randX, randY);

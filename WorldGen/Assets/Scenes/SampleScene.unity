@@ -3324,15 +3324,15 @@ MonoBehaviour:
   average: {fileID: 11400000, guid: 925db7e5f48652c4491624af814ecc84, type: 2}
   most: {fileID: 11400000, guid: 2ff9fdf614dbbe9498871df754f0a7d1, type: 2}
   least: {fileID: 11400000, guid: f18a4b5f1078d6c4181b91f0718af016, type: 2}
-  width: 160
-  height: 90
+  width: 320
+  height: 180
   magnification: 5
   xOffset: 0
   yOffset: 0
   map: {fileID: 880553813}
   bgWall: {fileID: 4477707379660759472, guid: e5bc5fc7d14164e4983293da4b37a7ba, type: 3}
   surfaceParams:
-    width: 160
+    width: 320
     depth: 0
     seed: 0
     smoothness: 30
