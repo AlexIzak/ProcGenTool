@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -66,34 +67,37 @@ public class Tunnels : MonoBehaviour
                 {
                     tilemap.SetTile(new Vector3Int((int)points[i].x, (int)points[i].y, 0), rock);
 
-                    float dx = (x - points[i].x) * (x - points[i].x);
-                    float dy = (y - points[i].y) * (y - points[i].y);
-                    float dist = Mathf.Sqrt(dx + dy);
-                    distances[i] = dist;
+
+                    float n = noise.cnoise(new float2(points[i].x, points[i].y));
+                    
+                    //float dx = (x - points[i].x) * (x - points[i].x);
+                    //float dy = (y - points[i].y) * (y - points[i].y);
+                    //float dist = Mathf.Sqrt(dx + dy);
+                    //distances[i] = dist;
+                    int value = GetIDwithWorleyNoise(n);
+                    map[x,y] = value; 
                 }
                 
-                int n = 0; //Decides which closest point the algorithm considers (0 being the first)
-                Array.Sort(distances);
+                //int n = 0; //Decides which closest point the algorithm considers (0 being the first)
+                //Array.Sort(distances);
                 
-                float noise = distances[n];
+                //float noise = distances[n];
 
                 //int index = x + y * width; //working with a 1D array
                 //TODO Get the distance to be used properly for the mapping of the grid
-                int value = GetIDwithWorleyNoise(noise);
-                map[x,y] = value; 
 
-                if (map[x,y] == 0) tilemap.SetTile(new Vector3Int(x, y, 0), hollow);
+                if (map[x,y] == 1) tilemap.SetTile(new Vector3Int(x, y, 0), hollow);
             }
         }
     }
 
     private int GetIDwithWorleyNoise(float noise)
     {
-        float rawNoise = noise / 10f;
+        //float rawNoise = noise / 10f;
 
-        float clampNoise = Mathf.Clamp(rawNoise, 0.0f, 2.0f);
+        float clampNoise = Mathf.Clamp(noise, 0.0f, 1.0f);
 
-        float scaledNoise = clampNoise;
+        float scaledNoise = clampNoise * 2;
         if (scaledNoise == 2f)
             scaledNoise -= 0.1f; //Stops value from being out of range (above 1 after rounding down)
 
