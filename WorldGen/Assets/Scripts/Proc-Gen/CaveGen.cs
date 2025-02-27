@@ -27,6 +27,7 @@ public class CaveGen : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             SmoothCave(originPoint);
+            //float[] sorted = Array.Sort();
         }
 
         DrawCave(originPoint, tilemap, hollow);

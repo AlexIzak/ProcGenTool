@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -62,6 +63,9 @@ public class UndergroundGen : MonoBehaviour
     [SerializeField]
     CaveGen cave;
 
+    [SerializeField]
+    Tunnels tunnels;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -78,6 +82,7 @@ public class UndergroundGen : MonoBehaviour
         Generate();
     }
 
+    //TODO Change this to either an array or list
     private void CreateTileset()
     {
         tileset = new Dictionary<int, TileBase>();
@@ -142,12 +147,13 @@ public class UndergroundGen : MonoBehaviour
 
     private void CreateTile(int tileID, int x, int y)
     {
-        TileHelper tile = ScriptableObject.CreateInstance<TileHelper>();
-        tile.tileBase = tileset[tileID];
+        //TileHelper tile = ScriptableObject.CreateInstance<TileHelper>();
+        //tile = (TileHelper)tileset[tileID];
+        TileBase tile = tileset[tileID];
         //GameObject tilemap = tileGroups[tileID];
         //tilemap.GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), tile.tileBase);
-        map.SetTile(new Vector3Int(x, y, 0), tile.tileBase);
-        tile.SetPos(x, y);
+        map.SetTile(new Vector3Int(x, y, 0), tile);
+        //tile.SetPos(x, y);
 
         //TODO Set neighbouring tiles - in a separate function that loops through the complete map
     }
@@ -187,6 +193,7 @@ public class UndergroundGen : MonoBehaviour
         xOffset = UnityEngine.Random.Range(-20, 20);
         yOffset = UnityEngine.Random.Range(-20, 20);
 
+        CreateTileset();
         //CreateTilemapGroups();
         GenerateUnderground();
         GenerateSurface();
@@ -195,7 +202,7 @@ public class UndergroundGen : MonoBehaviour
         //Tilemap caveTilemap = tileGroups[1].GetComponent<Tilemap>();
 
         //Cave Gen
-        //TODO Multiple caves to spawning - need to consider making them not overlap and their scaling with map (might be too big)
+        //TODO Have a function decide this instead of a static number based on map size etc
         int caveCount = 2;
 
         int caveWidth = width / 4;
@@ -208,14 +215,20 @@ public class UndergroundGen : MonoBehaviour
             Vector2 caveOrigin = new Vector2(xPos, yPos);
 
             cave.GenerateCave(caveWidth, caveHeight, caveOrigin, map, average);
+
+
         }
 
-        //cave.GenerateCave(caveWidth, caveHeight, caveOrigin, map, average);
+        //Tunnels Gen
+        //int tunnelFrequency = 200;
+
+        //tunnels.GenerateTunnels(width, height, tunnelFrequency, map, average);
     }
 
     public void SetData(int tileID) //Only swaps 1 tile because I can't access it in editor once I add 2 parameters
     {
-        tileset.Remove(0);
+        //TODO Add wrapper function
+        //tileset.Remove(0);
 
         switch (tileID)
         {
@@ -241,7 +254,7 @@ public class UndergroundGen : MonoBehaviour
 
     public void SwapTile(int tilesetID) //For the UI that changes the tiles - doesnt work 
     {
-        tileset.Remove(tilesetID);
+        //tileset.Remove(tilesetID);
         tileset.Add(tilesetID, average);
     }
 
