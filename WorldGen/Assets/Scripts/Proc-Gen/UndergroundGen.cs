@@ -220,9 +220,9 @@ public class UndergroundGen : MonoBehaviour
         }
 
         //Tunnels Gen
-        //int tunnelFrequency = 200;
+        int tunnelFrequency = 500;
 
-        //tunnels.GenerateTunnels(width, height, tunnelFrequency, map, average);
+        tunnels.GenerateTunnels(width, height, tunnelFrequency, map, average);
     }
 
     public void SetData(int tileID) //Only swaps 1 tile because I can't access it in editor once I add 2 parameters
