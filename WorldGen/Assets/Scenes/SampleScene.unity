@@ -1366,10 +1366,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c24b1c7db5c60f148adf5f6a77016059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 394657324}
-  ground: {fileID: 11400000, guid: f18a4b5f1078d6c4181b91f0718af016, type: 2}
-  empty: {fileID: 11400000, guid: 925db7e5f48652c4491624af814ecc84, type: 2}
-  rock: {fileID: 11400000, guid: 2ff9fdf614dbbe9498871df754f0a7d1, type: 2}
 --- !u!483693784 &394657323
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -3236,7 +3232,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!156049354 &953780595
 Grid:
   m_ObjectHideFlags: 0
@@ -3491,7 +3487,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1339980184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3577,10 +3573,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c24b1c7db5c60f148adf5f6a77016059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
-  ground: {fileID: 0}
-  empty: {fileID: 0}
-  rock: {fileID: 0}
 --- !u!1 &1402141347
 GameObject:
   m_ObjectHideFlags: 0
