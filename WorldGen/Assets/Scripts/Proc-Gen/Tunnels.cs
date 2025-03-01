@@ -11,7 +11,7 @@ public class Tunnels : MonoBehaviour
 {
     int width, height;
 
-    int[,] map;
+    float[,] map;
     Vector2[] points;
     int tunnelFrequency;
     int boundary = 10;
@@ -33,7 +33,7 @@ public class Tunnels : MonoBehaviour
     {
         this.width = width;
         this.height = height;
-        map = new int[width, height];
+        map = new float[width, height];
         
         tunnelFrequency = frequency;
 
@@ -62,48 +62,32 @@ public class Tunnels : MonoBehaviour
             {
                 //tilemap.SetTile(new Vector3Int(x, y, 0), ground);
 
-
-                //float scalar = 1;
-                //float n = noise.cellular2x2(new Vector2(x*scalar, y*scalar)).x;
-                ////float n = noise.cnoise(new float2(x/width, y/height));
-                //if (n < 0.5f)
+                //float[] distances = new float[points.Length];
+                //for (int i = 0; i < points.Length; i++)
                 //{
-                //    tilemap.SetTile(new Vector3Int(x, y), hollow);
-                //}
-
-
-
-
-                float[] distances = new float[points.Length];
-                for (int i = 0; i < points.Length; i++)
-                {
                     //tilemap.SetTile(new Vector3Int((int)points[i].x, (int)points[i].y, 0), rock);
 
+                    float n = noise.cellular(new float2(x / 16f, y / 16f)).x;
 
-                    //float n = noise.cnoise(new float2(points[i].x, points[i].y));
+                    //float d = Vector2.Distance(new Vector2(x, y), points[i]);
 
-                    float d = Vector2.Distance(new Vector2(x, y), points[i]);
-
-                    //float dx = (x - points[i].x) * (x - points[i].x);
-                    //float dy = (y - points[i].y) * (y - points[i].y);
-                    //float dist = Mathf.Sqrt(dx + dy);
-                    distances[i] = d;
+                    //distances[i] = d;
                     //int value = GetIDwithWorleyNoise(n);
-                    //map[x,y] = value; 
-                }
+                    map[x,y] = n; 
+                //}
 
-                int n = 0; //Decides which closest point the algorithm considers (0 being the first)
-                Array.Sort(distances);
+                //int n = 0; //Decides which closest point the algorithm considers (0 being the first)
+                //Array.Sort(distances);
 
-                float noise = distances[n];
+                //float noise = distances[n];
 
-                //int index = x + y * width; //working with a 1D array
                 //TODO Get the distance to be used properly for the mapping of the grid
-                int value = GetIDwithWorleyNoise(noise);
-                map[x,y] = value;
+                //int value = GetIDwithWorleyNoise(noise);
+                //map[x,y] = value;
 
                 //TODO Change the two values below to create more interesting tunnel shapes
-                if (map[x,y] > 15 && map[x, y] < 20) tilemap.SetTile(new Vector3Int(x, y, 0), hollow);
+                //if (map[x,y] > 15 && map[x, y] < 20) tilemap.SetTile(new Vector3Int(x, y, 0), hollow);
+                if (map[x, y] < 0.25f) tilemap.SetTile(new Vector3Int(x, y, 0), hollow);
             }
         }
     }
@@ -112,13 +96,13 @@ public class Tunnels : MonoBehaviour
     {
         //float rawNoise = noise / 10f;
 
-        //float clampNoise = Mathf.Clamp(noise, 0.0f, 1.0f);
+        float clampNoise = Mathf.Clamp(noise, 0.0f, 1.0f);
 
-        //float scaledNoise = clampNoise;
-        //if (scaledNoise == 2f)
-            //scaledNoise -= 0.1f; //Stops value from being out of range (above 1 after rounding down)
+        float scaledNoise = clampNoise * 2;
+        if (scaledNoise == 2f)
+            scaledNoise -= 0.1f; //Stops value from being out of range (above 1 after rounding down)
 
         //return Mathf.FloorToInt(scaledNoise);
-        return Mathf.FloorToInt(noise);
+        return Mathf.FloorToInt(scaledNoise);
     }
 }

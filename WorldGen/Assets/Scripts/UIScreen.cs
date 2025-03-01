@@ -34,7 +34,7 @@ public class UIScreen : MonoBehaviour
 
         algorithm.gameObject.SetActive(true);
 
-        algorithm.ClearMap();
+        //algorithm.ClearMap();
 
         algorithm.Generate();
     }
