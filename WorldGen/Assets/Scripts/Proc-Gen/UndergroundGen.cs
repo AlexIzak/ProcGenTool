@@ -203,6 +203,7 @@ public class UndergroundGen : MonoBehaviour
 
         //Cave Gen
         //TODO Have a function decide this instead of a static number based on map size etc
+        // Make more caves and smaller
         int caveCount = 2;
 
         int caveWidth = width / 4;

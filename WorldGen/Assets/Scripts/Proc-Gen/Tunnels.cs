@@ -26,7 +26,7 @@ public class Tunnels : MonoBehaviour
     //{
     //    grid = GetComponent<Tilemap>();
 
-    //    GenerateTunnels(160, 90, 100, grid, empty);
+    //    GenerateTunnels(160, 90, 200, grid, empty);
     //}
 
     public void GenerateTunnels(int width, int height, int frequency, Tilemap tilemap, TileBase hollow)
@@ -36,6 +36,11 @@ public class Tunnels : MonoBehaviour
         map = new float[width, height];
         
         tunnelFrequency = frequency;
+
+        //for (int i = 0; i < 5; i++)
+        //{
+        //    SmoothCave();
+        //}
 
         DrawTunnel(tilemap, hollow);
     }
@@ -67,7 +72,7 @@ public class Tunnels : MonoBehaviour
                 //{
                     //tilemap.SetTile(new Vector3Int((int)points[i].x, (int)points[i].y, 0), rock);
 
-                    float n = noise.cellular(new float2(x / 16f, y / 16f)).x;
+                    float n = noise.cellular(new float2(x / 10f, y / 10f)).x;
 
                     //float d = Vector2.Distance(new Vector2(x, y), points[i]);
 
@@ -81,28 +86,45 @@ public class Tunnels : MonoBehaviour
 
                 //float noise = distances[n];
 
-                //TODO Get the distance to be used properly for the mapping of the grid
-                //int value = GetIDwithWorleyNoise(noise);
-                //map[x,y] = value;
-
-                //TODO Change the two values below to create more interesting tunnel shapes
+                //Change the two values below to create more interesting tunnel shapes
                 //if (map[x,y] > 15 && map[x, y] < 20) tilemap.SetTile(new Vector3Int(x, y, 0), hollow);
-                if (map[x, y] < 0.25f) tilemap.SetTile(new Vector3Int(x, y, 0), hollow);
+                if (map[x, y] > 0.6f && map[x, y] < 0.8f) tilemap.SetTile(new Vector3Int(x, y, 0), hollow); //Will do for now
             }
         }
     }
 
-    private int GetIDwithWorleyNoise(float noise)
+    public void SmoothCave()
     {
-        //float rawNoise = noise / 10f;
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                int neighbourWallTiles = GetSurroundingWallCount(x, y);
 
-        float clampNoise = Mathf.Clamp(noise, 0.0f, 1.0f);
+                if (neighbourWallTiles > 4) map[x, y] = 1f;
 
-        float scaledNoise = clampNoise * 2;
-        if (scaledNoise == 2f)
-            scaledNoise -= 0.1f; //Stops value from being out of range (above 1 after rounding down)
+                else if (neighbourWallTiles < 4) map[x, y] = 0.6f;
+            }
+        }
+    }
 
-        //return Mathf.FloorToInt(scaledNoise);
-        return Mathf.FloorToInt(scaledNoise);
+    int GetSurroundingWallCount(int gridX, int gridY)
+    {
+        int wallCount = 0;
+
+        //Check a 3 by 3 grid around a tile
+        for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++)
+        {
+            for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++)
+            {
+                if (neighbourX >= 0 && neighbourX < width && neighbourY >= 0 && neighbourY < height) //Check we are within the cave bounds
+                {
+                    if (neighbourX != gridX || neighbourY != gridY) wallCount += Mathf.FloorToInt(map[neighbourX, neighbourY]); //If the tile = 1 (wall) add it to the count
+                }
+                else wallCount++;
+            }
+        }
+
+        return wallCount;
     }
 }
