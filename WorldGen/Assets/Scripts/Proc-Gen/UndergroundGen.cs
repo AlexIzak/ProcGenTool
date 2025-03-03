@@ -194,36 +194,33 @@ public class UndergroundGen : MonoBehaviour
         yOffset = UnityEngine.Random.Range(-20, 20);
 
         CreateTileset();
-        //CreateTilemapGroups();
+
         GenerateUnderground();
         GenerateSurface();
-        //GenerateCave();
-
-        //Tilemap caveTilemap = tileGroups[1].GetComponent<Tilemap>();
 
         //Cave Gen
-        //TODO Have a function decide this instead of a static number based on map size etc
-        // Make more caves and smaller
-        int caveCount = 2;
+        int caveWidth = width / 8; //Decent size values
+        int caveHeight = height / 6;
 
-        int caveWidth = width / 4;
-        int caveHeight = height / 3;
+        //Get more or less caves depending on map size and cave size
+        int caveCount = (width + height) / (caveWidth + caveHeight);
 
         for (int i = 0; i < caveCount; i++)
         {
+            //Getting a start position for the cave
             int xPos = UnityEngine.Random.Range(10, width - caveWidth);
             int yPos = UnityEngine.Random.Range(10, height - caveHeight);
             Vector2 caveOrigin = new Vector2(xPos, yPos);
 
+            //Making each cave increasingly smaller
+            caveWidth -= i;
+            caveHeight -= i;
+
             cave.GenerateCave(caveWidth, caveHeight, caveOrigin, map, average);
-
-
         }
 
         //Tunnels Gen
-        int tunnelFrequency = 300;
-
-        tunnels.GenerateTunnels(width, height, tunnelFrequency, map, average);
+        tunnels.GenerateTunnels(width, height, map, average);
     }
 
     public void SetData(int tileID) //Only swaps 1 tile because I can't access it in editor once I add 2 parameters
