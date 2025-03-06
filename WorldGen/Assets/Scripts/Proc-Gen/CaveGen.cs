@@ -33,6 +33,11 @@ public class CaveGen : MonoBehaviour
         DrawCave(originPoint, tilemap, hollow);
     }
 
+    public int[,] GetCaveStructure()
+    {
+        return cave;
+    }
+
     private void RandomFillCave(Vector2 pos)
     {
         if (useRandomSeed)
@@ -48,7 +53,7 @@ public class CaveGen : MonoBehaviour
             {
                 if(x == 0 || x == width - 1 || y == 0 || y == height - 1)
                 {
-                    cave[x, y] = 1;
+                    cave[x, y] = 1; //Wall
                 }
                 else cave[x,y] = (pseudoRandom.Next(0,100) < randomFillPercent) ? 1 : 0;
             }
@@ -63,9 +68,9 @@ public class CaveGen : MonoBehaviour
             {
                 int neighbourWallTiles = GetSurroundingWallCount(x, y, pos);
 
-                if (neighbourWallTiles > 4) cave[x, y] = 1;
+                if (neighbourWallTiles > 4) cave[x, y] = 1; //Wall
 
-                else if (neighbourWallTiles < 4) cave[x, y] = 0;
+                else if (neighbourWallTiles < 4) cave[x, y] = 0; //Empty
             }
         }
     }

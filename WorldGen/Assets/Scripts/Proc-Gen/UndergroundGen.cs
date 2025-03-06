@@ -27,10 +27,10 @@ public class UndergroundGen : MonoBehaviour
     [SerializeField] float magnification = 7.0f;
 
     [field:System.ComponentModel.ReadOnly(true)]    
-    [SerializeField] int xOffset = 0;
-    [SerializeField] int yOffset = 0;
+    [SerializeField] float xOffset = 0;
+    [SerializeField] float yOffset = 0;
 
-    List<List<int>> noiseGrid = new List<List<int>>();
+    int[,] noiseGrid;
     List<List<TileHelper>> tileGrid = new List<List<TileHelper>>();
 
     [SerializeField]
@@ -133,13 +133,13 @@ public class UndergroundGen : MonoBehaviour
     {
         for (int x = 0; x < width; x++)
         {
-            noiseGrid.Add(new List<int>());
+            //noiseGrid.Add(new List<int>());
             tileGrid.Add(new List<TileHelper>());
 
             for (int y = 0; y < height; y++)
             {
                 int tileID = GetIDwithPerlinNoise(x, y);
-                noiseGrid[x].Add(tileID);
+                noiseGrid[x, y] = tileID;
                 CreateTile(tileID, x, y);
             }
         }
@@ -160,8 +160,8 @@ public class UndergroundGen : MonoBehaviour
 
     private int GetIDwithPerlinNoise(int x, int y)
     {
-        float perlinX = (x - xOffset) / magnification;
-        float perlinY = (y - yOffset) / magnification;
+        float perlinX = ((float)x - xOffset) / magnification;
+        float perlinY = ((float)y - yOffset) / magnification;
 
         float rawPerlin = Mathf.PerlinNoise(perlinX, perlinY);
 
@@ -190,8 +190,8 @@ public class UndergroundGen : MonoBehaviour
 
     public void Generate()
     {
-        xOffset = UnityEngine.Random.Range(-20, 20);
-        yOffset = UnityEngine.Random.Range(-20, 20);
+        xOffset = UnityEngine.Random.Range(-20f, 20f);
+        yOffset = UnityEngine.Random.Range(-20f, 20f);
 
         CreateTileset();
 
@@ -217,10 +217,39 @@ public class UndergroundGen : MonoBehaviour
             caveHeight -= i;
 
             cave.GenerateCave(caveWidth, caveHeight, caveOrigin, map, average);
+
+            UpdateNoiseGrid(xPos, yPos, caveWidth, caveHeight);
         }
 
         //Tunnels Gen
         tunnels.GenerateTunnels(width, height, map, average);
+        //TODO Test
+        UpdateNoiseGrid(0, 0, width, height);
+    }
+
+    private void UpdateNoiseGrid(int xPos, int yPos, int width, int height)
+    {
+        if(xPos == 0 && yPos == 0)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    //When generating a tunnel, updates the data structure holding the tile types
+                    float value = tunnels.GetTunnelStructure()[x, y];
+                    if (value > 0.6f && value < 0.8f) noiseGrid[x, y] = 0; //If empty tile, update the noise grid
+                }
+            }
+        }
+        for (int x = xPos; x < xPos + width; x++)
+        {
+            for(int y = yPos; y < yPos + height; y++)
+            {
+                //When generating a cave, updates the data structure holding the tile types
+                int value = cave.GetCaveStructure()[x - xPos, y - yPos];
+                if (value == 0) noiseGrid[x, y] = value; //If empty tile, update the noise grid
+            }
+        }
     }
 
     public void SetData(int tileID) //Only swaps 1 tile because I can't access it in editor once I add 2 parameters

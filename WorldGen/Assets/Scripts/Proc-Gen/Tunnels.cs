@@ -58,6 +58,8 @@ public class Tunnels : MonoBehaviour
         }
     }
 
+    public float[,] GetTunnelStructure() { return map; }
+
     public void SmoothCave()
     {
         for (int x = 0; x < width; x++)
