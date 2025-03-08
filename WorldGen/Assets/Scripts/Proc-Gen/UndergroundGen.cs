@@ -66,10 +66,12 @@ public class UndergroundGen : MonoBehaviour
     [SerializeField]
     Tunnels tunnels;
 
+    [SerializeField]
+    Ore ore;
+
     // Start is called before the first frame update
     void Start()
     {
-
         float xPos = width / 2;
         float YPos = height / 2;
 
@@ -139,7 +141,7 @@ public class UndergroundGen : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 int tileID = GetIDwithPerlinNoise(x, y);
-                noiseGrid[x, y] = tileID;
+                //noiseGrid[x, y] = tileID;
                 CreateTile(tileID, x, y);
             }
         }
@@ -155,7 +157,7 @@ public class UndergroundGen : MonoBehaviour
         map.SetTile(new Vector3Int(x, y, 0), tile);
         //tile.SetPos(x, y);
 
-        //TODO Set neighbouring tiles - in a separate function that loops through the complete map
+        // Set neighbouring tiles - in a separate function that loops through the complete map
     }
 
     private int GetIDwithPerlinNoise(int x, int y)
@@ -218,18 +220,21 @@ public class UndergroundGen : MonoBehaviour
 
             cave.GenerateCave(caveWidth, caveHeight, caveOrigin, map, average);
 
-            UpdateNoiseGrid(xPos, yPos, caveWidth, caveHeight);
+            //UpdateNoiseGrid(xPos, yPos, caveWidth, caveHeight);
         }
 
         //Tunnels Gen
         tunnels.GenerateTunnels(width, height, map, average);
-        //TODO Test
-        UpdateNoiseGrid(0, 0, width, height);
+        //TODO Test - map does not draw
+        //UpdateNoiseGrid(0, 0, width, height);
+
+        //Ore Gen
+        ore.GenerateOre(width, height, map);
     }
 
     private void UpdateNoiseGrid(int xPos, int yPos, int width, int height)
     {
-        if(xPos == 0 && yPos == 0)
+        if (xPos == 0 && yPos == 0) //If pos starts at 0,0 - affects the whole map so its the tunnels
         {
             for (int x = 0; x < width; x++)
             {
@@ -241,13 +246,16 @@ public class UndergroundGen : MonoBehaviour
                 }
             }
         }
-        for (int x = xPos; x < xPos + width; x++)
+        else //This is for the caves
         {
-            for(int y = yPos; y < yPos + height; y++)
+            for (int x = xPos; x < xPos + width; x++)
             {
-                //When generating a cave, updates the data structure holding the tile types
-                int value = cave.GetCaveStructure()[x - xPos, y - yPos];
-                if (value == 0) noiseGrid[x, y] = value; //If empty tile, update the noise grid
+                for (int y = yPos; y < yPos + height; y++)
+                {
+                    //When generating a cave, updates the data structure holding the tile types
+                    int value = cave.GetCaveStructure()[x - xPos, y - yPos];
+                    if (value == 0) noiseGrid[x, y] = value; //If empty tile, update the noise grid
+                }
             }
         }
     }

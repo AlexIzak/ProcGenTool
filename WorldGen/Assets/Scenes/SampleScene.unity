@@ -3481,6 +3481,7 @@ GameObject:
   - component: {fileID: 1339980184}
   - component: {fileID: 1339980187}
   - component: {fileID: 1339980188}
+  - component: {fileID: 1339980189}
   m_Layer: 0
   m_Name: UndergroundGrid
   m_TagString: Untagged
@@ -3518,6 +3519,7 @@ MonoBehaviour:
     heightValue: 30
   cave: {fileID: 1339980187}
   tunnels: {fileID: 1339980188}
+  ore: {fileID: 1339980189}
 --- !u!156049354 &1339980185
 Grid:
   m_ObjectHideFlags: 0
@@ -3573,6 +3575,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c24b1c7db5c60f148adf5f6a77016059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1339980189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339980183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d2f2c89f413d441ac25f90a5957af0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ore: {fileID: 11400000, guid: cda49f19fe94dcf48b90bd7323603dea, type: 2}
 --- !u!1 &1402141347
 GameObject:
   m_ObjectHideFlags: 0

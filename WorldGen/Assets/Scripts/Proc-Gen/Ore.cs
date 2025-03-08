@@ -1,18 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Ore : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    int orePercentage = 5;
+    float magnification = 4f;
+    int[,] oreMap;
+
+    public TileBase ore;
+
+    public void GenerateOre(int width, int height, Tilemap tilemap)
     {
-        
+        oreMap = new int[width, height];
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                //Use perlin noise to get a pattern
+                oreMap[x, y] = GetIDwithPerlinNoise(x, y);
+
+                if (oreMap[x, y] == 4) tilemap.SetTile(new Vector3Int(x, y, 0), ore);
+            }
+        }
+        //TODO Check if tile is valid - not an empty tile
+
+        //Set it to ore
     }
 
-    // Update is called once per frame
-    void Update()
+    private int GetIDwithPerlinNoise(int x, int y)
     {
-        
+        float xOffset = Random.value;
+        float yOffset = Random.value;
+
+        float perlinX = ((float)x - xOffset) / magnification;
+        float perlinY = ((float)y - yOffset) / magnification;
+
+        float rawPerlin = Mathf.PerlinNoise(perlinX, perlinY);
+
+        float clampPerlin = Mathf.Clamp(rawPerlin, 0.0f, 1.0f);
+
+        float scaledPerlin = clampPerlin * orePercentage;
+        if (scaledPerlin == orePercentage)
+            scaledPerlin -= 1; //Stops value from being out of range since index starts from 0
+
+        return Mathf.FloorToInt(scaledPerlin);
     }
 }
