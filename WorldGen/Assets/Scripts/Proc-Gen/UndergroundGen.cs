@@ -133,6 +133,8 @@ public class UndergroundGen : MonoBehaviour
 
     private void GenerateUnderground()
     {
+        noiseGrid = new int[width, height];
+
         for (int x = 0; x < width; x++)
         {
             //noiseGrid.Add(new List<int>());
@@ -141,7 +143,7 @@ public class UndergroundGen : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 int tileID = GetIDwithPerlinNoise(x, y);
-                //noiseGrid[x, y] = tileID;
+                noiseGrid[x, y] = tileID;
                 CreateTile(tileID, x, y);
             }
         }
@@ -220,18 +222,19 @@ public class UndergroundGen : MonoBehaviour
 
             cave.GenerateCave(caveWidth, caveHeight, caveOrigin, map, average);
 
-            //UpdateNoiseGrid(xPos, yPos, caveWidth, caveHeight);
+            UpdateNoiseGrid(xPos, yPos, caveWidth, caveHeight);
         }
 
         //Tunnels Gen
         tunnels.GenerateTunnels(width, height, map, average);
         //TODO Test - map does not draw
-        //UpdateNoiseGrid(0, 0, width, height);
+        UpdateNoiseGrid(0, 0, width, height);
 
         //Ore Gen
-        ore.GenerateOre(width, height, map);
+        ore.GenerateOre(width, height, map, noiseGrid);
     }
 
+    
     private void UpdateNoiseGrid(int xPos, int yPos, int width, int height)
     {
         if (xPos == 0 && yPos == 0) //If pos starts at 0,0 - affects the whole map so its the tunnels
