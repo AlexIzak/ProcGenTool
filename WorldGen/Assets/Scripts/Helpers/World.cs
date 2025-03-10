@@ -4,11 +4,15 @@ using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class HelperTilemap : MonoBehaviour
+public class Tilesmeps : MonoBehaviour
 {
+    //TODO Have this class store and edit the tilemap
+
+    //Has stages as SOs stored inside another public SO that the user would see
+
     public void isOutofBounds()
     {
-
+        //Check no tiles spawn outside map
     }
 
     /// <summary>

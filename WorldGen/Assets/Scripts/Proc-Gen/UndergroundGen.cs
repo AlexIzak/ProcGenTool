@@ -164,8 +164,8 @@ public class UndergroundGen : MonoBehaviour
 
     private int GetIDwithPerlinNoise(int x, int y)
     {
-        float perlinX = ((float)x - xOffset) / magnification;
-        float perlinY = ((float)y - yOffset) / magnification;
+        float perlinX = (x - xOffset) / magnification;
+        float perlinY = (y - yOffset) / magnification;
 
         float rawPerlin = Mathf.PerlinNoise(perlinX, perlinY);
 

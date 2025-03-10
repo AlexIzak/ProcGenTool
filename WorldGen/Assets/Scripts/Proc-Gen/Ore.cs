@@ -12,6 +12,10 @@ public class Ore : MonoBehaviour
 
     public TileBase ore;
 
+    //TODO Have different ore spawn in different stages
+    //TODO Try floodfill or branching algorithm for ores (pick random point - no noise required)
+    //If location is air - try 3 more times close by then stop
+
     public void GenerateOre(int width, int height, Tilemap tilemap, int[,] terrainGrid)
     {
         oreMap = new int[width, height];
@@ -24,15 +28,15 @@ public class Ore : MonoBehaviour
                 oreMap[x, y] = GetIDwithPerlinNoise(x, y);
 
                 //Have more ore in deeper areas
-                int depthIncrement = height / (orePercentage - 1);
+                int depthIncrement = height / (orePercentage);
                 if (y < depthIncrement)
                 {
                     //Check if tile is valid - not an empty tile
-                    if (oreMap[x, y] > 2 && terrainGrid[x, y] != 0) tilemap.SetTile(new Vector3Int(x, y, 0), ore);
+                    if (oreMap[x, y] >= 2 && terrainGrid[x, y] != 0) tilemap.SetTile(new Vector3Int(x, y, 0), ore);
                 }
                 else
                 {
-                    int depthLayer = 2 + Mathf.FloorToInt(y / depthIncrement);
+                    int depthLayer = 1 + Mathf.FloorToInt(y / depthIncrement);
 
                     if(depthLayer >= orePercentage) 
                         depthLayer = orePercentage - 1;
