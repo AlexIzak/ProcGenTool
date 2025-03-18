@@ -7,8 +7,8 @@ using UnityEngine.Tilemaps;
 
 public class Ore : MonoBehaviour
 {
-    int orePercentage = 5;
-    float magnification = 4f;
+    //int orePercentage = 5;
+    //float magnification = 4f;
     int[,] oreMap;
 
     public TileBase ore;
@@ -21,8 +21,7 @@ public class Ore : MonoBehaviour
     List<Vector2> queue;
     Vector2 coords;
 
-    int width; 
-    int height;
+    int width, height;
 
     //TODO Have different ore spawn in different stages
 
@@ -76,14 +75,37 @@ public class Ore : MonoBehaviour
     //    return Mathf.FloorToInt(scaledPerlin);
     //}
 
-    //Floodfill algorithm
-    //TODO Try floodfill or branching algorithm for ores (pick random point - no noise required)
-    //If location is air - try 3 more times close by then stop
+ 
+    //public void GenerateOre(int width, int height, Tilemap tilemap, int[,] terrainGrid)
+    //{
+    //    this.width = width;
+    //    this.height = height;
+    //    oreMap = new int[width, height];
 
-    public void GenerateOre(int width, int height, Tilemap tilemap, int[,] terrainGrid)
+    //    int clumpCount = (width * height) / 100;
+
+    //    for (int i = 0; i < clumpCount; i++)
+    //    {
+    //        int startX = UnityEngine.Random.Range(10, width - 10);
+    //        int startY = UnityEngine.Random.Range(10, height - 10);
+
+    //        LazyFloodFill(startX, startY);
+    //    }
+
+    //    for (int x = 0; x < width; x++)
+    //    {
+    //        for (int y = 0; y < height; y++)
+    //        {
+    //            //If location is air - try 3 more times close by then stop
+    //            if (oreMap[x, y] == filled && terrainGrid[x, y] != 0) tilemap.SetTile(new Vector3Int(x, y, 0), ore);
+    //        }
+    //    }
+    //}
+
+    public void GenerateOre(Tilesmeps world)
     {
-        this.width = width;
-        this.height = height;
+        this.width = world.width;
+        this.height = world.height;
         oreMap = new int[width, height];
 
         int clumpCount = (width * height) / 100;
@@ -100,11 +122,13 @@ public class Ore : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                if (oreMap[x, y] == filled && terrainGrid[x, y] != 0) tilemap.SetTile(new Vector3Int(x, y, 0), ore);
+                //If location is air - try 3 more times close by then stop
+                if (oreMap[x, y] == filled && world.dataGrid[x, y] != 0) world.SetTile(x, y, ore, 5);
             }
         }
     }
 
+    //Floodfill algorithm
     void LazyFloodFill(int x, int y)
     {
         float chance = 100f;

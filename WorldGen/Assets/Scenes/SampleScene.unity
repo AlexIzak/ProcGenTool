@@ -3482,6 +3482,8 @@ GameObject:
   - component: {fileID: 1339980187}
   - component: {fileID: 1339980188}
   - component: {fileID: 1339980189}
+  - component: {fileID: 1339980190}
+  - component: {fileID: 1339980191}
   m_Layer: 0
   m_Name: UndergroundGrid
   m_TagString: Untagged
@@ -3504,21 +3506,11 @@ MonoBehaviour:
   average: {fileID: 11400000, guid: 925db7e5f48652c4491624af814ecc84, type: 2}
   most: {fileID: 11400000, guid: 2ff9fdf614dbbe9498871df754f0a7d1, type: 2}
   least: {fileID: 11400000, guid: f18a4b5f1078d6c4181b91f0718af016, type: 2}
-  width: 320
-  height: 180
+  grass: {fileID: 11400000, guid: 0986e763fb7eb1b4fbc33c5cbe7e7d94, type: 2}
   magnification: 5
   xOffset: 0
   yOffset: 0
-  map: {fileID: 880553813}
   bgWall: {fileID: 4477707379660759472, guid: e5bc5fc7d14164e4983293da4b37a7ba, type: 3}
-  surfaceParams:
-    width: 320
-    depth: 0
-    seed: 0
-    smoothness: 30
-    heightValue: 30
-  cave: {fileID: 1339980187}
-  tunnels: {fileID: 1339980188}
   ore: {fileID: 1339980189}
 --- !u!156049354 &1339980185
 Grid:
@@ -3563,6 +3555,7 @@ MonoBehaviour:
   seed: 0
   useRandomSeed: 1
   randomFillPercent: 45
+  hollow: {fileID: 11400000, guid: 925db7e5f48652c4491624af814ecc84, type: 2}
 --- !u!114 &1339980188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3588,6 +3581,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ore: {fileID: 11400000, guid: cda49f19fe94dcf48b90bd7323603dea, type: 2}
+  decay: 0.8
+--- !u!114 &1339980190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339980183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c7a2052c38b76a4a84909c1d384cbf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stages:
+  - {fileID: 11400000, guid: 31fc5fc8ed3cc6a45ab0e509d7cb1599, type: 2}
+  - {fileID: 11400000, guid: 03db452a9f43aa4468f6dbc2e3cc7d5a, type: 2}
+  - {fileID: 11400000, guid: d35329f515017094fa4385b779e294fd, type: 2}
+--- !u!114 &1339980191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339980183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84ff5bfe367476045a3304c08167a011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileGrid: {fileID: 880553813}
+  width: 320
+  height: 180
+  surfaceParams:
+    altitude: 0
+    seed: 0
+    smoothness: 14.6
+    heightValue: 30
 --- !u!1 &1402141347
 GameObject:
   m_ObjectHideFlags: 0

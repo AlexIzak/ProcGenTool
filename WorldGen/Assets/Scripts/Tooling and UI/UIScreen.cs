@@ -36,6 +36,6 @@ public class UIScreen : MonoBehaviour
 
         //algorithm.ClearMap();
 
-        algorithm.Generate();
+        //algorithm.Generate();
     }
 }

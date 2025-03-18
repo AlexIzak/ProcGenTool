@@ -17,7 +17,25 @@ public class CaveGen : MonoBehaviour
 
     int[,] cave;
 
-    public void GenerateCave(int width, int height, Vector2 originPoint, Tilemap tilemap, TileBase hollow)
+    public TileBase hollow;
+
+    //public void GenerateCave(int width, int height, Vector2 originPoint, Tilemap tilemap, TileBase hollow)
+    //{
+    //    this.width = (int)originPoint.x + width;
+    //    this.height = (int)originPoint.y + height;
+    //    cave = new int[this.width, this.height];
+    //    RandomFillCave(originPoint);
+
+    //    for (int i = 0; i < 5; i++)
+    //    {
+    //        SmoothCave(originPoint);
+    //        //float[] sorted = Array.Sort();
+    //    }
+
+    //    DrawCave(originPoint, tilemap, hollow);
+    //}
+
+    public void GenerateCave(int width, int height, Vector2 originPoint, Tilesmeps world)
     {
         this.width = (int)originPoint.x + width;
         this.height = (int)originPoint.y + height;
@@ -30,7 +48,7 @@ public class CaveGen : MonoBehaviour
             //float[] sorted = Array.Sort();
         }
 
-        DrawCave(originPoint, tilemap, hollow);
+        DrawCave(originPoint, world);
     }
 
     public int[,] GetCaveStructure()
@@ -95,13 +113,25 @@ public class CaveGen : MonoBehaviour
         return wallCount;
     }
 
-    void DrawCave(Vector2 pos, Tilemap tilemap, TileBase hollow)
+    //void DrawCave(Vector2 pos, Tilemap tilemap, TileBase hollow)
+    //{
+    //    for (int x = (int)pos.x; x < width; x++)
+    //    {
+    //        for (int y = (int)pos.y; y < height; y++)
+    //        {
+    //            if (cave[x, y] == 0) tilemap.SetTile(new Vector3Int(x, y, 0), hollow);
+    //        }
+    //    }
+    //}
+
+    void DrawCave(Vector2 pos, Tilesmeps world)
     {
         for (int x = (int)pos.x; x < width; x++)
         {
             for (int y = (int)pos.y; y < height; y++)
             {
-                if (cave[x, y] == 0) tilemap.SetTile(new Vector3Int(x, y, 0), hollow);
+                //if (cave[x, y] == 0) world.ClearTile(x, y);
+                if (cave[x, y] == 0) world.SetTile(x, y, hollow, 0);
             }
         }
     }
