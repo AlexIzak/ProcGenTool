@@ -9,7 +9,7 @@ using UnityEngine.Tilemaps;
 
 public class Tilesmeps : MonoBehaviour
 {
-    //TODO Have this class store and edit the tilemap
+    //This class stores and edits the tilemap
     [SerializeField]
     public Tilemap tileGrid;
 
@@ -39,6 +39,19 @@ public class Tilesmeps : MonoBehaviour
     [HideInInspector]
     public int[,] dataGrid;
 
+    [Header("The tiles used for the generic terrain (dirt, rock etc.)")]
+    //[SerializeField]
+    public List<TileBase> basicTiles;
+
+    [Header("The tiles used for the ore veins")]
+    //[SerializeField]
+    public List<TileBase> oreTiles;
+
+    [Header("The tiles used for the surface (grass, snow etc)")]
+    //[SerializeField]
+    public List<TileBase> surfaceTiles;
+    
+
     private void Awake()
     {
         dataGrid = new int[width, height];
@@ -67,6 +80,8 @@ public class Tilesmeps : MonoBehaviour
     {
         Destroy(tileGrid.GetTile(new Vector3Int(x, y, 0)));
         dataGrid[x, y] = 0;
+
+        //tileGrid.SetTile()
     }
 
     //Has stages as SOs stored inside another public SO that the user would see

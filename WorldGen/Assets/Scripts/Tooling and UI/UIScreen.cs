@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UIScreen : MonoBehaviour
 {
-    public UndergroundGen algorithm;
+    //public UndergroundGen algorithm;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +19,7 @@ public class UIScreen : MonoBehaviour
         {
             gameObject.GetComponent<Canvas>().enabled = true;
 
-            algorithm.gameObject.SetActive(false);
+            //algorithm.gameObject.SetActive(false);
         }
     }
 
@@ -32,7 +32,7 @@ public class UIScreen : MonoBehaviour
     {
         gameObject.GetComponent<Canvas>().enabled = false;
 
-        algorithm.gameObject.SetActive(true);
+        //algorithm.gameObject.SetActive(true);
 
         //algorithm.ClearMap();
 
