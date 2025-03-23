@@ -25,6 +25,9 @@ public class TerrainSO : BaseGeneration
         GenerateSurface(world);
     }
 
+    //TODO Make the world generation use multiple tiles (e.g 5 dirt tiles, 5 rock tiles and 3 grass tiles)
+    //TODO Use ruletile to place blocks in the apropriate orientation
+
     public void GenerateSurface(Tilesmeps world)
     {
         world.surfaceParams.seed = UnityEngine.Random.Range(-100000, 100000);
@@ -37,11 +40,17 @@ public class TerrainSO : BaseGeneration
 
             for (int y = world.height; y < world.surfaceParams.altitude; ++y)
             {
-                world.SetTile(x, y, world.basicTiles[2], 1);// 2 is dirt
+                int grassType = UnityEngine.Random.Range(0, world.surfaceTiles.Count);
+
+                int dirtType = UnityEngine.Random.Range(0, world.dirtTiles.Count);
+
+                //world.SetTile(x, y, world.basicTiles[2], 1);// 2 is dirt
+
+                world.SetTile(x, y, world.dirtTiles[dirtType], 1);
 
                 //Set the top tiles to grass
                 if (y + 1 >= world.surfaceParams.altitude)
-                    world.SetTile(x, y, world.surfaceTiles[0], 3);
+                    world.SetTile(x, y, world.surfaceTiles[grassType], 3);
             }
         }
     }

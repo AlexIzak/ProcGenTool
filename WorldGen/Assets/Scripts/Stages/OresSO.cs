@@ -37,17 +37,24 @@ public class OresSO : BaseGeneration
             int startY = UnityEngine.Random.Range(10, height - 10);
 
             LazyFloodFill(startX, startY);
-        }
 
-        //TODO Move this logic in the above for loop and have each clump be a random ore
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
+            int oreType = UnityEngine.Random.Range(0, world.oreTiles.Count);
+
+            //TODO Move this logic in the above for loop and have each clump be a random ore
+            for (int x = 0; x < width; x++)
             {
-                //If location is air - try 3 more times close by then stop
-                if (oreMap[x, y] == filled && world.dataGrid[x, y] != 0) world.SetTile(x, y, world.oreTiles[0], 5);
+                for (int y = 0; y < height; y++)
+                {
+                    //If location is air - try 3 more times close by then stop
+                    if (oreMap[x, y] == filled && world.dataGrid[x, y] != 0)
+                    {
+                        world.SetTile(x, y, world.oreTiles[oreType], 5);
+                        oreMap[x, y] = visited;
+                    }
+                }
             }
         }
+
     }
 
     //Floodfill algorithm

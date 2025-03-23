@@ -43,6 +43,14 @@ public class Tilesmeps : MonoBehaviour
     //[SerializeField]
     public List<TileBase> basicTiles;
 
+    [Header("Different variations of dirt tiles")]
+    //[SerializeField]
+    public List<TileBase> dirtTiles;
+
+    [Header("Different variations of rock tiles")]
+    //[SerializeField]
+    public List<TileBase> rockTiles;
+
     [Header("The tiles used for the ore veins")]
     //[SerializeField]
     public List<TileBase> oreTiles;
