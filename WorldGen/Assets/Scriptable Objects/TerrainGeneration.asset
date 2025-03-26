@@ -12,3 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30ce5b89d3cc8ea498912f67a76af680, type: 3}
   m_Name: TerrainGeneration
   m_EditorClassIdentifier: 
+  basicTiles:
+  - {fileID: 11400000, guid: 925db7e5f48652c4491624af814ecc84, type: 2}
+  - {fileID: 11400000, guid: 03db1406b1b0db548ab7ebd5939e6c1c, type: 2}
+  - {fileID: 11400000, guid: 5bf6106d549e35a4e99993efe1a5f842, type: 2}
+  dirtTiles:
+  - {fileID: 11400000, guid: 5bf6106d549e35a4e99993efe1a5f842, type: 2}
+  dirt: {fileID: 11400000, guid: 5bf6106d549e35a4e99993efe1a5f842, type: 2}
+  grass: {fileID: 11400000, guid: c8a27f74062985f4e8710c48a969792c, type: 2}
+  surfaceTiles:
+  - {fileID: 11400000, guid: c8a27f74062985f4e8710c48a969792c, type: 2}

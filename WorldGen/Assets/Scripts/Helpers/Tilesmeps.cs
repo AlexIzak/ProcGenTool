@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.WSA;
 
 public class Tilesmeps : MonoBehaviour
 {
@@ -35,26 +36,10 @@ public class Tilesmeps : MonoBehaviour
     [HideInInspector]
     public int[,] dataGrid;
 
-    [Header("The tiles used for the generic terrain (dirt, rock etc.)")]
-    //[SerializeField]
-    public List<TileBase> basicTiles;
+    //[Header("Different variations of rock tiles")]
+    ////[SerializeField]
+    //public List<TileBase> rockTiles;
 
-    [Header("Different variations of dirt tiles")]
-    //[SerializeField]
-    public List<TileBase> dirtTiles;
-
-    [Header("Different variations of rock tiles")]
-    //[SerializeField]
-    public List<TileBase> rockTiles;
-
-    [Header("The tiles used for the ore veins")]
-    //[SerializeField]
-    public List<TileBase> oreTiles;
-
-    [Header("The tiles used for the surface (grass, snow etc)")]
-    //[SerializeField]
-    public List<TileBase> surfaceTiles;
-    
 
     private void Awake()
     {
@@ -70,13 +55,19 @@ public class Tilesmeps : MonoBehaviour
     /// <param name="tileID"></param> The value stored in the array for this tile speciffically
     public void SetTile(int x, int y, TileBase tile, int tileID)
     {
-        tileGrid.SetTile(new Vector3Int(x, y, 0), tile);
 
         if (!isOutofBounds(x, y))
         {
-            dataGrid[x, y] = tileID;
+            tileGrid.SetTile(new Vector3Int(x, y, 0), tile);
+            //dataGrid[x, y] = tileID;
         }
         //else Debug.Log("Out of bounds");
+    }
+
+    public TileBase GetTile(int x, int y)
+    {
+        //TODO Put it back to tile return type - (returns null when using an 'as' cast)
+        return tileGrid.GetTile(new Vector3Int(x, y, 0));
     }
 
     //Removes a tile

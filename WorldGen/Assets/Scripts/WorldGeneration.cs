@@ -10,10 +10,11 @@ public class WorldGeneration : MonoBehaviour
     [SerializeField]
     List<BaseGeneration> stages;
 
+    //TODO Add another SO as a container for all the stages so I can have the other ones for testing
+
     // Start is called before the first frame update
     void Start()
     {
-
         world = GetComponent<Tilesmeps>();
 
         foreach (var stage in stages)

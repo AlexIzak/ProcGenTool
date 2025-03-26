@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9b25f28de7796d4e84e4caaf3ed9c2d, type: 3}
+  m_Name: IronGen
+  m_EditorClassIdentifier: 
+  maxClusterSize: 15
+  heightDist:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.51009154
+      value: 1.0030017
+      inSlope: 0.14768377
+      outSlope: 0.14768377
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.12219136
+    - serializedVersion: 3
+      time: 0.9915612
+      value: -0.0023584366
+      inSlope: -1.5836998
+      outSlope: -1.5836998
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.10395258
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  decay: 0.17222227
+  ore: {fileID: 11400000, guid: e9d11b315e3cc9149876f5d9fe453215, type: 2}

@@ -1,17 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(fileName = "TerrainGeneration", menuName = "Generation/Terrain", order = -1)]
 public class TerrainSO : BaseGeneration
 {
-    
+    [Header("The tiles used for the generic terrain (dirt, rock etc.)")]
+    //[SerializeField]
+    public List<TileBase> basicTiles;
+
+    [Header("Different variations of dirt tiles")]
+    public List<TileBase> dirtTiles;
+
+    public TileBase dirt;
+    public TileBase grass;
+
+    [Header("The tiles used for the surface (grass, snow etc)")]
+    public List<TileBase> surfaceTiles;
+
     float xOffset = 0f;
     float yOffset = 0f;
 
     float magnification = 0f;
 
-    int tileCount = 0;
+    //int tileCount = 0;
 
     public override void Generate(Tilesmeps world)
     {
@@ -40,24 +54,25 @@ public class TerrainSO : BaseGeneration
 
             for (int y = world.height; y < world.surfaceParams.altitude; ++y)
             {
-                int grassType = UnityEngine.Random.Range(0, world.surfaceTiles.Count);
+                //int grassType = UnityEngine.Random.Range(0, surfaceTiles.Count);
 
-                int dirtType = UnityEngine.Random.Range(0, world.dirtTiles.Count);
+                //int dirtType = UnityEngine.Random.Range(0, dirtTiles.Count);
 
-                //world.SetTile(x, y, world.basicTiles[2], 1);// 2 is dirt
-
-                world.SetTile(x, y, world.dirtTiles[dirtType], 1);
+                //world.SetTile(x, y, dirtTiles[dirtType], 1);
+                world.SetTile(x, y, dirt, 1);
 
                 //Set the top tiles to grass
                 if (y + 1 >= world.surfaceParams.altitude)
-                    world.SetTile(x, y, world.surfaceTiles[grassType], 3);
+                    //world.SetTile(x, y, surfaceTiles[grassType], 3);
+                    world.SetTile(x, y, grass, 3);
+
+                Debug.Log("Placed!");
             }
         }
     }
     
     public void GenerateUnderground(Tilesmeps world)
     {
-        tileCount = world.basicTiles.Count;
 
         for (int x = 0; x < world.width; x++)
         {
@@ -65,7 +80,7 @@ public class TerrainSO : BaseGeneration
             {
                 int tileID = GetIDwithPerlinNoise(x, y);
                 world.dataGrid[x, y] = tileID;
-                world.SetTile(x, y, world.basicTiles[tileID], tileID);
+                world.SetTile(x, y, basicTiles[tileID], tileID);
             }
         }
     }
@@ -79,8 +94,8 @@ public class TerrainSO : BaseGeneration
 
         float clampPerlin = Mathf.Clamp(rawPerlin, 0.0f, 1.0f);
 
-        float scaledPerlin = clampPerlin * tileCount;
-        if (scaledPerlin == tileCount)
+        float scaledPerlin = clampPerlin * basicTiles.Count;
+        if (scaledPerlin == basicTiles.Count)
             scaledPerlin -= 1; //Stops value from being out of range since index starts from 0
 
         return Mathf.FloorToInt(scaledPerlin);

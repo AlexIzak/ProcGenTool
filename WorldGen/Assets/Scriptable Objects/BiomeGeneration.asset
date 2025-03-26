@@ -9,6 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9b25f28de7796d4e84e4caaf3ed9c2d, type: 3}
-  m_Name: OreGeneration
+  m_Script: {fileID: 11500000, guid: b11307867dfd4044d8788665869eb58e, type: 3}
+  m_Name: BiomeGeneration
   m_EditorClassIdentifier: 
+  decay: 0.9
+  biomeTiles:
+  - {fileID: 11400000, guid: 5f9a45691b7186e4c9db4921e0680ed8, type: 2}
