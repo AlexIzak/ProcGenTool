@@ -56,4 +56,4 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   decay: 0.9
-  ore: {fileID: 11400000, guid: 35ab726bfdd7aa341a57b19d37becde5, type: 2}
+  ore: {fileID: 11400000, guid: 641cefb3d381b1042ad1d1e7140b9652, type: 2}

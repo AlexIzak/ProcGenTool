@@ -18,26 +18,43 @@ public class CavesSO : BaseGeneration
     int[,] cave;
     float[,] tunnels;
 
+    //Public parameters
+    [Range(1, 5)]
+    [SerializeField]
+    int caveSize = 3;
+
+    [Range(2, 5)]
+    [SerializeField]
+    int caveMultiplier = 2;
+
+    [Header("The bigger the value the emptier the cave")]
+    [Range(2, 8)]
+    [SerializeField]
+    int caveSmoothness = 5;
+
     public override void Generate(Tilesmeps world)
     {
 
         //Cave Parameters
-        int caveWidth = world.width / 8; //Decent size values
-        int caveHeight = world.height / 6;
+        int caveWidth = (world.GetWidth() / 20) * caveSize; //Decent size values
+        int caveHeight = (world.GetHeight() / 15) * caveSize;
 
         //Get more or less caves depending on map size and cave size
-        int caveCount = (world.width + world.height) / (caveWidth + caveHeight);
+        int caveCount = (world.GetWidth() + world.GetHeight()) / (caveWidth + caveHeight) * caveMultiplier;
 
         for (int i = 0; i < caveCount; i++)
         {
             //Getting a start position for the cave
-            int xPos = UnityEngine.Random.Range(10, world.width - caveWidth);
-            int yPos = UnityEngine.Random.Range(10, world.height - caveHeight);
+            int xPos = UnityEngine.Random.Range(10, world.GetWidth() - caveWidth);
+            int yPos = UnityEngine.Random.Range(10, world.GetHeight() - caveHeight);
             Vector2 caveOrigin = new Vector2(xPos, yPos);
 
-            //Making each cave increasingly smaller
-            caveWidth -= i;
-            caveHeight -= i;
+            if(caveSize > 1)
+            {
+                //Making each cave increasingly smaller
+                caveWidth -= i;
+                caveHeight -= i;
+            }
 
             GenerateCave(caveWidth, caveHeight, caveOrigin, world);
         }
@@ -53,7 +70,7 @@ public class CavesSO : BaseGeneration
         cave = new int[this.width, this.height];
         RandomFillCave(originPoint);
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < caveSmoothness; i++)
         {
             SmoothCave(originPoint);
         }
@@ -127,7 +144,7 @@ public class CavesSO : BaseGeneration
             for (int y = (int)pos.y; y < height; y++)
             {
                 //if (cave[x, y] == 0) world.ClearTile(x, y);
-                if (cave[x, y] == 0) world.SetTile(x, y, null, 0);
+                if (cave[x, y] == 0) world.SetTile(x, y, null);
             }
         }
     }
@@ -135,9 +152,7 @@ public class CavesSO : BaseGeneration
     //Tunnels Generation Logic
     public void GenerateTunnels(Tilesmeps world)
     {
-        this.width = world.width;
-        this.height = world.height;
-        tunnels = new float[width, height];
+        tunnels = new float[world.GetWidth(), world.GetHeight()];
 
         DrawTunnel(world);
     }
@@ -146,15 +161,15 @@ public class CavesSO : BaseGeneration
     {
         float offset = UnityEngine.Random.Range(8f, 16f);
 
-        for (int x = 0; x < world.width; x++)
+        for (int x = 0; x < world.GetWidth(); x++)
         {
-            for (int y = 0; y < world.height; y++)
+            for (int y = 0; y < world.GetHeight(); y++)
             {
                 float n = noise.cellular(new float2(x / offset, y / offset)).x;
                 tunnels[x, y] = n;
 
                 //Change the two values below to create more interesting tunnel shapes
-                if (tunnels[x, y] > 0.6f && tunnels[x, y] < 0.8f) world.SetTile(x, y, null, 0);
+                if (tunnels[x, y] > 0.6f && tunnels[x, y] < 0.8f) world.SetTile(x, y, null);
             }
         }
     }

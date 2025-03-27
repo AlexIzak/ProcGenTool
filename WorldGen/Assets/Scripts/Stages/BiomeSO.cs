@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Collections.LowLevel.Unsafe;
-using UnityEditor.Search;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(fileName = "BiomeGeneration", menuName = "Generation/Biome", order = 2)]
 public class BiomeSO : BaseGeneration
@@ -23,7 +20,7 @@ public class BiomeSO : BaseGeneration
 
     [Header("The tiles used for the biomes (sand, granite etc)")]
     //[SerializeField]
-    public List<TileBase> biomeTiles;
+    public List<MyTile> biomeTiles;
 
     public override void Generate(Tilesmeps world)
     {
@@ -32,8 +29,8 @@ public class BiomeSO : BaseGeneration
 
     private void GenerateBiome(Tilesmeps world)
     {
-        this.width = world.width;
-        this.height = world.height;
+        this.width = world.GetWidth();
+        this.height = world.GetHeight();
         biome = new int[width, height];
 
         int biomeCount = (width * height) / 10000;
@@ -43,6 +40,7 @@ public class BiomeSO : BaseGeneration
             int startX = UnityEngine.Random.Range(30, width - 30);
             int startY = UnityEngine.Random.Range(50, height - 30);
 
+            //TODO Change to the floodfill from oreSO
             LazyFloodFill(startX, startY);
 
             int biomeType = UnityEngine.Random.Range(0, biomeTiles.Count);
@@ -53,9 +51,9 @@ public class BiomeSO : BaseGeneration
                 for (int y = 0; y < height; y++)
                 {
                     //If location is air - try 3 more times close by then stop
-                    if (biome[x, y] == filled && world.dataGrid[x, y] != 0 && world.dataGrid[x, y] != 5)
+                    if (biome[x, y] == filled && !world.GetTile(x,y).Tags.Contains("Hollow") && !world.GetTile(x, y).Tags.Contains("Ore"))
                     {
-                        world.SetTile(x, y, biomeTiles[biomeType], 10);
+                        world.SetTile(x, y, biomeTiles[biomeType]);
                         biome[x, y] = visited;
                     }
                 }

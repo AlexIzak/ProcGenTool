@@ -6,23 +6,24 @@ using UnityEngine.Tilemaps;
 public class OresSO : BaseGeneration
 {
     public int maxClusterSize = 1;
+
+    [Header("This curve controls the ore distribution along the depth of the map")]
     public AnimationCurve heightDist;
 
-    int[,] oreMap;
-
-    [Range(0f, 0.9f)]
-    public float decay = 0.5f;
-
-    int visited = -1;
-    int filled = 1;
-    List<Vector2> queue;
-    Vector2 coords;
+    //Old method
+    //int[,] oreMap;
+    //[Range(0f, 0.9f)]
+    //public float decay = 0.5f;
+    //int visited = -1;
+    //int filled = 1;
+    //List<Vector2> queue;
+    //Vector2 coords;
 
     int width, height;
 
     //TODO Add an ID for each tile using a List of strings by extending the Tilebase class
     [Header("The tile used for the ore veins")]
-    public TileBase ore;
+    public MyTile ore;
 
     public override void Generate(Tilesmeps world)
     {
@@ -31,98 +32,74 @@ public class OresSO : BaseGeneration
 
     public void GenerateOre(Tilesmeps world)
     {
-        this.width = world.width;
-        this.height = world.height;
-        oreMap = new int[width, height];
+        this.width = world.GetWidth();
+        this.height = world.GetHeight();
+        //oreMap = new int[width, height];
 
         int clumpCount = (width * height) / 100;
         //int clumpCount = 25;
 
         for (int i = 0; i < clumpCount; i++)
         {
-            //int minY = (int)heightDist.Evaluate(0.0f);
-            //int maxY = (int)heightDist.Evaluate(1.0f);
-
+            //Making sure the ores ar at least a bit away from the edge of the map
             int startX = UnityEngine.Random.Range(10, width - 10);
             int startY = UnityEngine.Random.Range(10, height - 10);
 
             //LazyFloodFill(startX, startY);
-
-            //TODO Have this as one of the parameters for the testing
-
+            
+            //Calculating ore amount based off the animation curve
             int clusterSize = (int)(heightDist.Evaluate(startY / (float)height) * maxClusterSize);
-
-            Debug.Log($"X : {startX}, Y : {startY}, cluster : {clusterSize}");
 
             if(clusterSize > 0 && world.GetTile(startX, startY) != null)
                 FloodFillOre(startX, startY, clusterSize, world);
+
+            //Testing
+            Debug.Log($"X : {startX}, Y : {startY}, cluster : {clusterSize}");
         }
     }
 
-    //Floodfill algorithm
-    void LazyFloodFill(int x, int y)
-    {
-        float chance = 100f;
+    //Floodfill algorithm - Old method
+    //void LazyFloodFill(int x, int y)
+    //{
+    //    float chance = 100f;
 
-        float depth = (float)height / (float)y;
+    //    float depth = (float)height / (float)y;
 
-        //decay = Normalize(depth);
+    //    //decay = Normalize(depth);
 
-        decay = Mathf.Clamp(decay, 0f, 0.9f);
+    //    decay = Mathf.Clamp(decay, 0f, 0.9f);
 
-        queue = new List<Vector2>();
-        queue.Add(new Vector2(x, y));
-        while (queue.Count != 0)
-        {
-            coords = queue[0];
-            queue.RemoveAt(0);
-            oreMap[(int)coords.x, (int)coords.y] = filled;
+    //    queue = new List<Vector2>();
+    //    queue.Add(new Vector2(x, y));
+    //    while (queue.Count != 0)
+    //    {
+    //        coords = queue[0];
+    //        queue.RemoveAt(0);
+    //        oreMap[(int)coords.x, (int)coords.y] = filled;
 
-            if (chance >= UnityEngine.Random.Range(1, 100))
-            {
-                HandleNeighbours();
-                chance = chance * decay;
-            }
-        }
-    }
+    //        if (chance >= UnityEngine.Random.Range(1, 100))
+    //        {
+    //            HandleNeighbours();
+    //            chance = chance * decay;
+    //        }
+    //    }
+    //}
 
-    //TODO Take into consideration the count for filling
-    void LazyFloodFill(int x, int y, int count)
-    {
-        if (IsWithinBounds(x, y))
-        {
-            oreMap[x, y] = filled;
-            count -= 1;
+    //private float Normalize(float v)
+    //{
+    //    return v - 1f / ((float)height / 10f) - 1f;
+    //}
 
-            for (int i = 0; i < count; i++)
-            {
-                for (int neighbourX = x - 2; neighbourX <= x + 2; neighbourX++)
-                {
-                    for (int neighbourY = y - 2; neighbourY <= y + 2; neighbourY++)
-                    {
-                        count--;
-                        oreMap[neighbourX, neighbourY] = filled;
-                    }
-                }
-            }
-        }
-    }
+    //private void HandleNeighbours()
+    //{
+    //    ValidateandAddtoQueue((int)coords.x, (int)coords.y - 1);
 
-    private float Normalize(float v)
-    {
-        return v - 1f / ((float)height / 10f) - 1f;
-    }
+    //    ValidateandAddtoQueue((int)coords.x, (int)coords.y + 1);
 
-    private void HandleNeighbours()
-    {
-        ValidateandAddtoQueue((int)coords.x, (int)coords.y - 1);
+    //    ValidateandAddtoQueue((int)coords.x - 1, (int)coords.y);
 
-        ValidateandAddtoQueue((int)coords.x, (int)coords.y + 1);
-
-        ValidateandAddtoQueue((int)coords.x - 1, (int)coords.y);
-
-        ValidateandAddtoQueue((int)coords.x + 1, (int)coords.y);
-    }
+    //    ValidateandAddtoQueue((int)coords.x + 1, (int)coords.y);
+    //}
 
     private bool IsWithinBounds(float x, float y)
     {
@@ -131,52 +108,39 @@ public class OresSO : BaseGeneration
         return true;
     }
 
-    private void ValidateandAddtoQueue(int x, int y)
-    {
-        if (IsWithinBounds(x, y) && oreMap[x, y] != filled && oreMap[x, y] != visited)
-        {
-            queue.Add(new Vector2(x, y));
-            oreMap[x, y] = visited;
-        }
-    }
+    //private void ValidateandAddtoQueue(int x, int y)
+    //{
+    //    if (IsWithinBounds(x, y) && oreMap[x, y] != filled && oreMap[x, y] != visited)
+    //    {
+    //        queue.Add(new Vector2(x, y));
+    //        oreMap[x, y] = visited;
+    //    }
+    //}
 
     private void FloodFillOre(int x, int y, int count, Tilesmeps world)
     {
-        //world.SetTile(x, y, ore, 5);
+
         int counter = 0;
 
         List<Vector2Int> frontier = new();
-        //frontier.Add(new Vector2Int(x + 1, y));
-        //frontier.Add(new Vector2Int(x - 1, y));
-        //frontier.Add(new Vector2Int(x, y + 1));
-        //frontier.Add(new Vector2Int(x, y - 1));
 
         frontier.Add(new Vector2Int(x,y));
 
 
         while (counter < count && frontier.Count > 0)
         {
-
             // Pick random frontier pos
             int frontierIndex = Random.Range(0, frontier.Count);
             Vector2Int frontierPos = frontier[frontierIndex];
             // Remove picked pos from frontier
             frontier.RemoveAt(frontierIndex);
 
-            world.SetTile(frontierPos.x, frontierPos.y, ore, 5);
+            world.SetTile(frontierPos.x, frontierPos.y, ore);
             counter++;
 
             List<Vector2Int> validNeighbours = FindValidNeighbours(frontierPos, world);
             if (validNeighbours.Count > 0)
             {
-                // Pick a random valid neighbour
-                //int randomNeighbourIndex = Random.Range(0, validNeighbours.Count);
-                //Vector2Int randomNeighbour = validNeighbours[randomNeighbourIndex];
-                //validNeighbours.RemoveAt(randomNeighbourIndex);
-
-                // Set the valid neighbour as an ore
-                //world.SetTile(randomNeighbour.x, randomNeighbour.y, ore, 5);
-
                 // Add found valid neighbours to frontier
                 foreach (var neighbour in validNeighbours)
                 {
@@ -187,7 +151,6 @@ public class OresSO : BaseGeneration
                 }
             }
         }
-
     }
 
     private List<Vector2Int> FindValidNeighbours(Vector2Int startPos, Tilesmeps world)
@@ -199,17 +162,14 @@ public class OresSO : BaseGeneration
             {
                 Vector2Int currentPos = startPos + new Vector2Int(x, y);
 
-                //if (x == 0 && y == 0) // Skip startPos
-                    //continue;
                 if (Mathf.Abs(x) == Mathf.Abs(y)) // Skip diagonals and start
                     continue;
                 if (!IsWithinBounds(currentPos.x, currentPos.y)) // Skip out of bounds
                     continue;
-                if (world.GetTile(x, y) == null) // Skip air
+                if (world.GetTile(x, y) == null)// && world.GetTile(x,y).Tags.Contains("Hollow")) // Skip air
                     continue;
 
                 valid.Add(currentPos);
-                //return currentPos;
             }
 
         return valid;

@@ -13,12 +13,16 @@ MonoBehaviour:
   m_Name: TerrainGeneration
   m_EditorClassIdentifier: 
   basicTiles:
-  - {fileID: 11400000, guid: 925db7e5f48652c4491624af814ecc84, type: 2}
-  - {fileID: 11400000, guid: 03db1406b1b0db548ab7ebd5939e6c1c, type: 2}
-  - {fileID: 11400000, guid: 5bf6106d549e35a4e99993efe1a5f842, type: 2}
+  - {fileID: 11400000, guid: 48cfa2736d0bf6a4795938435512bdf4, type: 2}
+  - {fileID: 11400000, guid: f538ed4573c37d64b9514392fcf79100, type: 2}
+  - {fileID: 11400000, guid: ab6f4672bc0a8d04f85e0cf243a960b8, type: 2}
   dirtTiles:
-  - {fileID: 11400000, guid: 5bf6106d549e35a4e99993efe1a5f842, type: 2}
-  dirt: {fileID: 11400000, guid: 5bf6106d549e35a4e99993efe1a5f842, type: 2}
-  grass: {fileID: 11400000, guid: c8a27f74062985f4e8710c48a969792c, type: 2}
+  - {fileID: 11400000, guid: ab6f4672bc0a8d04f85e0cf243a960b8, type: 2}
   surfaceTiles:
-  - {fileID: 11400000, guid: c8a27f74062985f4e8710c48a969792c, type: 2}
+  - {fileID: 11400000, guid: df42bd748d997584c91c35b15c4d3bc9, type: 2}
+  magnification: 5
+  surfaceParams:
+    altitude: 376
+    seed: 0
+    smoothness: 14
+    heightValue: 30

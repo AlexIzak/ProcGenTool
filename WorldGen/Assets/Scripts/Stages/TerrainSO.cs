@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
@@ -8,32 +10,54 @@ using UnityEngine.Tilemaps;
 public class TerrainSO : BaseGeneration
 {
     [Header("The tiles used for the generic terrain (dirt, rock etc.)")]
-    //[SerializeField]
-    public List<TileBase> basicTiles;
+    [SerializeField]
+    List<MyTile> basicTiles;
 
-    [Header("Different variations of dirt tiles")]
-    public List<TileBase> dirtTiles;
+    [Header("Different variations of dirt tiles for the surface")]
+    [SerializeField]
+    List<MyTile> dirtTiles;
 
-    public TileBase dirt;
-    public TileBase grass;
+    [Header("The tiles used for the surface top (grass, snow etc)")]
+    [SerializeField] 
+    List<MyTile> surfaceTiles;
 
-    [Header("The tiles used for the surface (grass, snow etc)")]
-    public List<TileBase> surfaceTiles;
+    [Header("Amount of detail in the underground")]
+    [SerializeField]
+    [Range(5f, 10f)]
+    float magnification = 5f;
+
+    [Serializable]
+    struct SurfaceParams
+    {
+        //Size,
+        //public int width;
+
+        public int altitude;
+
+        public int seed;
+
+        [Range(0f, 30f)]
+        public float smoothness;
+
+        [Range(0f, 30f)]
+        public float heightValue;
+    }
+
+    [SerializeField]
+    SurfaceParams surfaceParams;
 
     float xOffset = 0f;
     float yOffset = 0f;
 
-    float magnification = 0f;
-
-    //int tileCount = 0;
+    bool useRandomSeed = true;
 
     public override void Generate(Tilesmeps world)
     {
 
-        xOffset = UnityEngine.Random.Range(-100f, 100f); //This value seems to get rid of the mirroring effect - mirroring happens when value is low
-        yOffset = UnityEngine.Random.Range(-100f, 100f);
+        xOffset = UnityEngine.Random.Range(-100f, world.GetWidth()/2);
+        yOffset = UnityEngine.Random.Range(-100f, world.GetHeight()/2);
 
-        magnification = UnityEngine.Random.Range(5f, 10f); //Recommended range
+        //magnification = UnityEngine.Random.Range(5f, 10f); //Recommended range
 
         GenerateUnderground(world);
         GenerateSurface(world);
@@ -44,29 +68,34 @@ public class TerrainSO : BaseGeneration
 
     public void GenerateSurface(Tilesmeps world)
     {
-        world.surfaceParams.seed = UnityEngine.Random.Range(-100000, 100000);
+        if (useRandomSeed)
+        {
+            surfaceParams.seed = Mathf.FloorToInt(Time.time * 100f);
+        }
 
-        for (int x = 0; x < world.width; ++x)
+        System.Random pseudoRandom = new System.Random(surfaceParams.seed);
+
+        for (int x = 0; x < world.GetWidth(); ++x)
         {
             //Calculate the height of the surface with perlin noise
-            float p = Mathf.PerlinNoise(x / world.surfaceParams.smoothness, world.surfaceParams.seed);
-            world.surfaceParams.altitude = Mathf.RoundToInt(world.surfaceParams.heightValue * p + world.height);
+            float p = Mathf.PerlinNoise(x / surfaceParams.smoothness, surfaceParams.seed);
+            surfaceParams.altitude = Mathf.RoundToInt(surfaceParams.heightValue * p + world.GetHeight());
 
-            for (int y = world.height; y < world.surfaceParams.altitude; ++y)
+            for (int y = world.GetHeight(); y < surfaceParams.altitude; ++y)
             {
-                //int grassType = UnityEngine.Random.Range(0, surfaceTiles.Count);
+                int grassType = UnityEngine.Random.Range(0, surfaceTiles.Count);
 
-                //int dirtType = UnityEngine.Random.Range(0, dirtTiles.Count);
+                int dirtType = UnityEngine.Random.Range(0, dirtTiles.Count);
 
-                //world.SetTile(x, y, dirtTiles[dirtType], 1);
-                world.SetTile(x, y, dirt, 1);
+                world.SetTile(x, y, dirtTiles[dirtType]);
+                //world.SetTile(x, y, dirt, 1);
 
                 //Set the top tiles to grass
-                if (y + 1 >= world.surfaceParams.altitude)
-                    //world.SetTile(x, y, surfaceTiles[grassType], 3);
-                    world.SetTile(x, y, grass, 3);
+                if (y + 1 >= surfaceParams.altitude)
+                    world.SetTile(x, y, surfaceTiles[grassType]);
+                    //world.SetTile(x, y, grass, 3);
 
-                Debug.Log("Placed!");
+                //Debug.Log("Placed!");
             }
         }
     }
@@ -74,13 +103,13 @@ public class TerrainSO : BaseGeneration
     public void GenerateUnderground(Tilesmeps world)
     {
 
-        for (int x = 0; x < world.width; x++)
+        for (int x = 0; x < world.GetWidth(); x++)
         {
-            for (int y = 0; y < world.height; y++)
+            for (int y = 0; y < world.GetHeight(); y++)
             {
                 int tileID = GetIDwithPerlinNoise(x, y);
-                world.dataGrid[x, y] = tileID;
-                world.SetTile(x, y, basicTiles[tileID], tileID);
+            
+                world.SetTile(x, y, basicTiles[tileID]);
             }
         }
     }
