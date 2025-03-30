@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11307867dfd4044d8788665869eb58e, type: 3}
   m_Name: BiomeGeneration
   m_EditorClassIdentifier: 
-  decay: 0.9
   biomeTiles:
-  - {fileID: 11400000, guid: 5f9a45691b7186e4c9db4921e0680ed8, type: 2}
+  - {fileID: 11400000, guid: fb675848311ff3644a658e53a4980b6d, type: 2}
+  - {fileID: 11400000, guid: f254d115478b2ce44b43a6ef8d6de2bc, type: 2}
+  - {fileID: 11400000, guid: d2edbaa48ee82af42a7ef7aebd560259, type: 2}
+  biomeSize: 50
+  biomeMultiplier: 2

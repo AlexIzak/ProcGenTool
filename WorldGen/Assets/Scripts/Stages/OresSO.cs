@@ -54,7 +54,7 @@ public class OresSO : BaseGeneration
                 FloodFillOre(startX, startY, clusterSize, world);
 
             //Testing
-            Debug.Log($"X : {startX}, Y : {startY}, cluster : {clusterSize}");
+            //Debug.Log($"X : {startX}, Y : {startY}, cluster : {clusterSize}");
         }
     }
 

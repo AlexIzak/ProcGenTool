@@ -7,9 +7,8 @@ using UnityEngine;
 public class BiomeSO : BaseGeneration
 {
     int[,] biome;
-
-    [Range(0f, 0.9f)]
-    public float decay;
+    
+    float decay = 0.99f;
 
     int visited = -1;
     int filled = 1;
@@ -22,6 +21,14 @@ public class BiomeSO : BaseGeneration
     //[SerializeField]
     public List<MyTile> biomeTiles;
 
+    [Range(10, 100)]
+    [SerializeField]
+    int biomeSize = 50;
+
+    [Range(1, 10)]
+    [SerializeField]
+    int biomeMultiplier = 5;
+
     public override void Generate(Tilesmeps world)
     {
         GenerateBiome(world);
@@ -33,7 +40,7 @@ public class BiomeSO : BaseGeneration
         this.height = world.GetHeight();
         biome = new int[width, height];
 
-        int biomeCount = (width * height) / 10000;
+        int biomeCount = ((width * height) / (100 * biomeSize)) * biomeMultiplier;
 
         for (int i = 0; i < biomeCount; i++)
         {
@@ -45,12 +52,11 @@ public class BiomeSO : BaseGeneration
 
             int biomeType = UnityEngine.Random.Range(0, biomeTiles.Count);
 
-            //TODO Move this logic in the above for loop and have each clump be a random ore
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
-                    //If location is air - try 3 more times close by then stop
+                    //Check for valid location
                     if (biome[x, y] == filled && !world.GetTile(x,y).Tags.Contains("Hollow") && !world.GetTile(x, y).Tags.Contains("Ore"))
                     {
                         world.SetTile(x, y, biomeTiles[biomeType]);
@@ -70,7 +76,7 @@ public class BiomeSO : BaseGeneration
 
         //decay = Normalize(depth);
 
-        decay = 0.95f;
+        //decay = 0.95f;
 
         //decay = Mathf.Clamp(decay, 0f, 0.9f);
 
@@ -85,7 +91,9 @@ public class BiomeSO : BaseGeneration
             if (chance >= UnityEngine.Random.Range(1, 100))
             {
                 HandleNeighbours();
-                chance = chance * decay;
+
+                if (UnityEngine.Random.Range(0, biomeSize) == 0)
+                    chance = chance * decay;
             }
         }
     }
@@ -100,7 +108,6 @@ public class BiomeSO : BaseGeneration
         ValidateandAddtoQueue((int)coords.x, (int)coords.y - 1);
         ValidateandAddtoQueue((int)coords.x, (int)coords.y + 1);
         ValidateandAddtoQueue((int)coords.x - 1, (int)coords.y);
-
         ValidateandAddtoQueue((int)coords.x + 1, (int)coords.y);
     }
 

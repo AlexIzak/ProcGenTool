@@ -32,6 +32,9 @@ public class CavesSO : BaseGeneration
     [SerializeField]
     int caveSmoothness = 5;
 
+    [SerializeField]
+    MyTile hollow;
+
     public override void Generate(Tilesmeps world)
     {
 
@@ -144,7 +147,8 @@ public class CavesSO : BaseGeneration
             for (int y = (int)pos.y; y < height; y++)
             {
                 //if (cave[x, y] == 0) world.ClearTile(x, y);
-                if (cave[x, y] == 0) world.SetTile(x, y, null);
+                //if (cave[x, y] == 0) world.SetTile(x, y, null);
+                if (cave[x, y] == 0) world.SetTile(x, y, hollow);
             }
         }
     }
@@ -169,7 +173,8 @@ public class CavesSO : BaseGeneration
                 tunnels[x, y] = n;
 
                 //Change the two values below to create more interesting tunnel shapes
-                if (tunnels[x, y] > 0.6f && tunnels[x, y] < 0.8f) world.SetTile(x, y, null);
+                //if (tunnels[x, y] > 0.6f && tunnels[x, y] < 0.8f) world.SetTile(x, y, null);
+                if (tunnels[x, y] > 0.6f && tunnels[x, y] < 0.8f) world.SetTile(x, y, hollow);
             }
         }
     }
