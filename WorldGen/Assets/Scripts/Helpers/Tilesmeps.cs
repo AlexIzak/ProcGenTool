@@ -12,9 +12,8 @@ public class Tilesmeps : MonoBehaviour
     [SerializeField]
     private int width, height;
 
-    //[Header("Different variations of rock tiles")]
-    ////[SerializeField]
-    //public List<TileBase> rockTiles;
+    //[SerializeField]
+    int altitude;
 
     /// <summary>
     /// Set a tile both visually and in the data grid (noiseGrid)
@@ -46,18 +45,48 @@ public class Tilesmeps : MonoBehaviour
         //tileGrid.SetTile()
     }
 
-    //Has stages as SOs stored inside another public SO that the user would see
-
+    /// <summary>
+    /// Returns true if tile is out of bounds
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public bool isOutofBounds(int x, int y)
     {
         //Check no tiles spawn outside map
-        if(x < 0 || y < 0 || x > width || y >= height + 30) return true;
+        if(x < 0 || y < 0 || x > width || y >= height + altitude) return true;
 
         return false;
     }
 
     public int GetWidth() { return width; }
     public int GetHeight() { return height; }
+    public int GetAltitude() { return altitude; }
+    public int GetSurfaceMaxHeight()
+    {
+        List<int> altitudes = new List<int>();
+
+        //Store all of the altitudes
+        for (int x = 0; x < width; x++)
+        {
+            altitudes.Add(altitude);
+        }
+
+        int lastValue = 0;
+
+        //Compare the altitudes till we get the biggest one
+        foreach(int a in  altitudes)
+        {
+            if(lastValue < a) lastValue = a;
+        }
+
+        return lastValue;
+    }
+
+    public void SetAltitude(int input)
+    {
+        altitude = input;
+    }
 
 
     /// <summary>

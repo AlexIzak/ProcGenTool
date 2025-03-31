@@ -21,8 +21,5 @@ MonoBehaviour:
   surfaceTiles:
   - {fileID: 11400000, guid: df42bd748d997584c91c35b15c4d3bc9, type: 2}
   magnification: 5
-  surfaceParams:
-    altitude: 376
-    seed: 0
-    smoothness: 14
-    heightValue: 30
+  smoothness: 14
+  heightValue: 30

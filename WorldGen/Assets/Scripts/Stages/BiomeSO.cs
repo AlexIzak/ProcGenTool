@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BiomeGeneration", menuName = "Generation/Biome", order = 2)]
 public class BiomeSO : BaseGeneration
 {
-    int[,] biome;
+    int[,] biomesMap;
     
     float decay = 0.99f;
 
@@ -18,12 +18,25 @@ public class BiomeSO : BaseGeneration
     int width, height;
 
     [Header("The tiles used for the biomes (sand, granite etc)")]
-    //[SerializeField]
-    public List<MyTile> biomeTiles;
-
-    [Range(10, 100)]
     [SerializeField]
-    int biomeSize = 50;
+    List<MyTile> biomeTiles;
+
+    [SerializeField]
+    bool isSurfaceBiome;
+
+    [Header("The tiles used for the surface of the biomes (snow, dry grass etc) \n Add in the same order as the above list of tiles to match biome with appropriate surface")]
+    [SerializeField]
+    List<MyTile> biomeSurfaceTiles;
+
+    [Header("Surface Biome Attributes")]
+    [Range(1, 5)]
+    [SerializeField]
+    int biomeCount = 2;
+
+    [Header("Underground Biome Attributes")]
+    [Range(10, 50)]
+    [SerializeField]
+    int biomeSize = 30;
 
     [Range(1, 10)]
     [SerializeField]
@@ -31,16 +44,50 @@ public class BiomeSO : BaseGeneration
 
     public override void Generate(Tilesmeps world)
     {
-        GenerateBiome(world);
+        if(isSurfaceBiome) 
+            GenerateSurfaceBiomes(world);
+        else 
+            GenerateUndergroundBiomes(world);
     }
 
-    private void GenerateBiome(Tilesmeps world)
+    private void GenerateSurfaceBiomes(Tilesmeps world)
+    {
+        this.width = world.GetWidth();
+        this.height = world.GetSurfaceMaxHeight() - world.GetHeight();
+        //biomesMap = new int[width, height];
+
+        int biomeSize = (width * height) / (50 * biomeCount);
+
+        for (int i = 0; i < biomeCount; i++)
+        {
+            int startX = UnityEngine.Random.Range(0, width - biomeSize);
+            int startY = world.GetHeight();
+
+            int biomeType = UnityEngine.Random.Range(0, biomeTiles.Count);
+
+            for (int x = startX; x < startX + biomeSize; x++)
+            {
+                for (int y = startY; y < startY + world.GetAltitude(); y++)
+                {
+                    if (world.GetTile(x, y) != null)
+                    {
+                        if(world.GetTile(x,y).Tags.Contains("Surface"))
+                            world.SetTile(x, y, biomeSurfaceTiles[biomeType]);
+                        else
+                            world.SetTile(x, y, biomeTiles[biomeType]);
+                    }
+                }
+            }
+        }
+    }
+
+    private void GenerateUndergroundBiomes(Tilesmeps world)
     {
         this.width = world.GetWidth();
         this.height = world.GetHeight();
-        biome = new int[width, height];
+        biomesMap = new int[width, height];
 
-        int biomeCount = ((width * height) / (100 * biomeSize)) * biomeMultiplier;
+        int biomeCount = ((width * height) / (500 * biomeSize)) * biomeMultiplier;
 
         for (int i = 0; i < biomeCount; i++)
         {
@@ -57,10 +104,10 @@ public class BiomeSO : BaseGeneration
                 for (int y = 0; y < height; y++)
                 {
                     //Check for valid location
-                    if (biome[x, y] == filled && !world.GetTile(x,y).Tags.Contains("Hollow") && !world.GetTile(x, y).Tags.Contains("Ore"))
+                    if (biomesMap[x, y] == filled && !world.GetTile(x,y).Tags.Contains("Hollow") && !world.GetTile(x, y).Tags.Contains("Ore"))
                     {
                         world.SetTile(x, y, biomeTiles[biomeType]);
-                        biome[x, y] = visited;
+                        biomesMap[x, y] = visited;
                     }
                 }
             }
@@ -86,13 +133,13 @@ public class BiomeSO : BaseGeneration
         {
             coords = queue[0];
             queue.RemoveAt(0);
-            biome[(int)coords.x, (int)coords.y] = filled;
+            biomesMap[(int)coords.x, (int)coords.y] = filled;
 
             if (chance >= UnityEngine.Random.Range(1, 100))
             {
                 HandleNeighbours();
 
-                if (UnityEngine.Random.Range(0, biomeSize) == 0)
+                if (UnityEngine.Random.Range(0, biomeSize) < biomeSize / 10)
                     chance = chance * decay;
             }
         }
@@ -120,10 +167,10 @@ public class BiomeSO : BaseGeneration
 
     private void ValidateandAddtoQueue(int x, int y)
     {
-        if (IsWithinBounds(x, y) && biome[x, y] != filled && biome[x, y] != visited)
+        if (IsWithinBounds(x, y) && biomesMap[x, y] != filled && biomesMap[x, y] != visited)
         {
             queue.Add(new Vector2(x, y));
-            biome[x, y] = visited;
+            biomesMap[x, y] = visited;
         }
     }
 }

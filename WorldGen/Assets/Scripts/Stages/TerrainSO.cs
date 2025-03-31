@@ -26,30 +26,40 @@ public class TerrainSO : BaseGeneration
     [Range(5f, 10f)]
     float magnification = 5f;
 
-    [Serializable]
-    struct SurfaceParams
-    {
-        //Size,
-        //public int width;
-
-        public int altitude;
-
-        public int seed;
-
-        [Range(0f, 30f)]
-        public float smoothness;
-
-        [Range(0f, 30f)]
-        public float heightValue;
-    }
-
+    [Range(0f, 30f)]
     [SerializeField]
-    SurfaceParams surfaceParams;
+    float smoothness;
+
+    [Range(0f, 30f)]
+    [SerializeField]
+    float heightValue;
+
+    //[Serializable]
+    //struct SurfaceParams
+    //{
+    //    //Size,
+    //    //public int width;
+
+    //    public int altitude;
+
+    //    public int seed;
+
+    //    [Range(0f, 30f)]
+    //    public float smoothness;
+
+    //    [Range(0f, 30f)]
+    //    public float heightValue;
+    //}
+
+    //[SerializeField]
+    //SurfaceParams surfaceParams;
 
     float xOffset = 0f;
     float yOffset = 0f;
 
     bool useRandomSeed = true;
+
+    int seed;
 
     public override void Generate(Tilesmeps world)
     {
@@ -70,18 +80,19 @@ public class TerrainSO : BaseGeneration
     {
         if (useRandomSeed)
         {
-            surfaceParams.seed = Mathf.FloorToInt(Time.time * 100f);
+            seed = Mathf.FloorToInt(Time.time * 100f);
         }
 
-        System.Random pseudoRandom = new System.Random(surfaceParams.seed);
+        System.Random pseudoRandom = new System.Random(seed);
 
         for (int x = 0; x < world.GetWidth(); ++x)
         {
             //Calculate the height of the surface with perlin noise
-            float p = Mathf.PerlinNoise(x / surfaceParams.smoothness, surfaceParams.seed);
-            surfaceParams.altitude = Mathf.RoundToInt(surfaceParams.heightValue * p + world.GetHeight());
+            float p = Mathf.PerlinNoise(x / smoothness, seed);
+            int alt = Mathf.RoundToInt(heightValue * p + world.GetHeight());
+            world.SetAltitude(alt);
 
-            for (int y = world.GetHeight(); y < surfaceParams.altitude; ++y)
+            for (int y = world.GetHeight(); y < world.GetAltitude(); ++y)
             {
                 int grassType = UnityEngine.Random.Range(0, surfaceTiles.Count);
 
@@ -91,7 +102,7 @@ public class TerrainSO : BaseGeneration
                 //world.SetTile(x, y, dirt, 1);
 
                 //Set the top tiles to grass
-                if (y + 1 >= surfaceParams.altitude)
+                if (y + 1 >= world.GetAltitude())
                     world.SetTile(x, y, surfaceTiles[grassType]);
                     //world.SetTile(x, y, grass, 3);
 
