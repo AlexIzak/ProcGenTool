@@ -39,4 +39,24 @@ public class WorldGeneration : MonoBehaviour
             //ClearMap();
         }
     }
+
+    public void SetStages(BaseGeneration stage)
+    {
+        stages.Add(stage);
+    }
+
+    public void Generate()
+    {
+        world = GetComponent<Tilesmeps>();
+
+        foreach (var stage in stages)
+        {
+            stage.Generate(world);
+        }
+    }
+
+    public void Clear()
+    {
+        world.tileGrid.ClearAllTiles();
+    }
 }

@@ -20,5 +20,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 21db5362e6ab4cc4f9f138636f269942, type: 2}
   - {fileID: 11400000, guid: ede82200459503e4c8898ee7f30bac38, type: 2}
   biomeCount: 4
+  decay: 0.99
   biomeSize: 50
   biomeMultiplier: 5

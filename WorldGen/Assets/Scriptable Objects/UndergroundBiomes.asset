@@ -19,5 +19,6 @@ MonoBehaviour:
   isSurfaceBiome: 0
   biomeSurfaceTiles: []
   biomeCount: 2
-  biomeSize: 37
-  biomeMultiplier: 7
+  decay: 0.95
+  biomeSize: 30
+  biomeMultiplier: 4

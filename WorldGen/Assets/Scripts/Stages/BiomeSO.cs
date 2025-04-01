@@ -7,8 +7,7 @@ using UnityEngine;
 public class BiomeSO : BaseGeneration
 {
     int[,] biomesMap;
-    
-    float decay = 0.99f;
+
 
     int visited = -1;
     int filled = 1;
@@ -29,11 +28,17 @@ public class BiomeSO : BaseGeneration
     List<MyTile> biomeSurfaceTiles;
 
     [Header("Surface Biome Attributes")]
+
     [Range(1, 5)]
     [SerializeField]
     int biomeCount = 2;
 
     [Header("Underground Biome Attributes")]
+
+    [Range(0.9f, 0.99f)]
+    [SerializeField]
+    float decay = 0.95f;
+
     [Range(10, 50)]
     [SerializeField]
     int biomeSize = 30;
@@ -139,7 +144,7 @@ public class BiomeSO : BaseGeneration
             {
                 HandleNeighbours();
 
-                if (UnityEngine.Random.Range(0, biomeSize) < biomeSize / 10)
+                if (UnityEngine.Random.Range(0, biomeSize) == 0)
                     chance = chance * decay;
             }
         }
