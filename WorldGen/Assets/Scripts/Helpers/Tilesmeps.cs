@@ -15,6 +15,8 @@ public class Tilesmeps : MonoBehaviour
     //[SerializeField]
     int altitude;
 
+    //TODO Add a button that opens the editor window here
+
     /// <summary>
     /// Set a tile both visually and in the data grid (noiseGrid)
     /// </summary>

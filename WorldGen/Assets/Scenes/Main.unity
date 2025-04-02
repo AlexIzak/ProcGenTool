@@ -3443,7 +3443,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!156049354 &1339980185
 Grid:
   m_ObjectHideFlags: 0
@@ -3492,6 +3492,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8e195de6c14d5094682f3062b9345f0e, type: 2}
   - {fileID: 11400000, guid: cd2818b1f0b06534191781997d5eb1f9, type: 2}
   - {fileID: 11400000, guid: 3321f77bf7927e34ca9cbe9550ec7d38, type: 2}
+  - {fileID: 11400000, guid: 31fc5fc8ed3cc6a45ab0e509d7cb1599, type: 2}
+  - {fileID: 11400000, guid: 31fc5fc8ed3cc6a45ab0e509d7cb1599, type: 2}
+  - {fileID: 11400000, guid: 31fc5fc8ed3cc6a45ab0e509d7cb1599, type: 2}
 --- !u!114 &1339980191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4948,7 +4951,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1911324979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4979,6 +4982,9 @@ MonoBehaviour:
   stages:
   - {fileID: 11400000, guid: 31fc5fc8ed3cc6a45ab0e509d7cb1599, type: 2}
   - {fileID: 11400000, guid: 3321f77bf7927e34ca9cbe9550ec7d38, type: 2}
+  - {fileID: 11400000, guid: 31fc5fc8ed3cc6a45ab0e509d7cb1599, type: 2}
+  - {fileID: 11400000, guid: 31fc5fc8ed3cc6a45ab0e509d7cb1599, type: 2}
+  - {fileID: 11400000, guid: 31fc5fc8ed3cc6a45ab0e509d7cb1599, type: 2}
 --- !u!156049354 &1911324981
 Grid:
   m_ObjectHideFlags: 0
@@ -5415,7 +5421,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 519420032}
-  - {fileID: 1339980186}
   - {fileID: 1911324982}
+  - {fileID: 1339980186}
   - {fileID: 1954008421}
   - {fileID: 1232553847}

@@ -8,7 +8,7 @@ public class WorldGeneration : MonoBehaviour
     Tilesmeps world;
 
     [SerializeField]
-    List<BaseGeneration> stages;
+    public List<BaseGeneration> stages = new List<BaseGeneration>();
 
     //TODO Add another SO as a container for all the stages so I can have the other ones for testing
 
@@ -44,6 +44,8 @@ public class WorldGeneration : MonoBehaviour
     {
         stages.Add(stage);
     }
+
+    public List<BaseGeneration> GetStages() { return stages; }
 
     public void Generate()
     {

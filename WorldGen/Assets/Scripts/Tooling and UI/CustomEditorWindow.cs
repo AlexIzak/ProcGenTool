@@ -2,16 +2,29 @@ using UnityEngine;
 using UnityEditor;
 using Unity.VisualScripting;
 using System.Collections.Generic;
+using UnityEditorInternal;
+using System;
 
 public class CustomEditorWindow : EditorWindow
 {
+    //Object tool; //The generation script
 
-    string description = string.Empty;
-    Object tool;
+    //List variables
+    const string helpText = "Cannot find 'World Generation Script' component on any GameObject in the scene!";
+    static Rect helpRect = new Rect(0f, 0f, 400f, 100f); //Size of above message
 
-    List<Object> stages = new List<Object>();   
+    //Size of list
+    static Vector2 windowMinSize = Vector2.zero * 500f;
+    static Rect listRect = new Rect(Vector2.zero, windowMinSize);
 
-    Object stage;
+    //Is the world generated or not
+    bool isActive;
+
+    SerializedObject objectSO = null; //Script containing the list
+    ReorderableList listRE = null; //Editor list
+
+    //Reference to the list class
+    WorldGeneration worldGen;
 
     [MenuItem("Window/World Generator")]
     static void OpenWindow()
@@ -23,43 +36,121 @@ public class CustomEditorWindow : EditorWindow
         GetWindow<CustomEditorWindow>("2D World Generator");
     }
 
+    private void OnEnable()
+    {
+        worldGen = FindFirstObjectByType<WorldGeneration>();
+
+        if (worldGen)
+        {
+            objectSO = new SerializedObject(worldGen);
+
+            //Initialise list
+            listRE = new ReorderableList(objectSO, objectSO.FindProperty("stages"), true, true, true, true);
+
+            //listRE.DoList(listRect);
+
+            //EditorGUILayout.PropertyField(objectSO.FindProperty("stages"));
+
+            //Drawing the list
+            listRE.drawHeaderCallback = (rect) => EditorGUI.LabelField(rect, "Stages");
+            listRE.displayAdd = true;
+            listRE.displayRemove = true;
+            listRE.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            {
+                rect.y += 5f;
+                rect.height = EditorGUIUtility.singleLineHeight;
+
+                GUIContent objectLabel = new GUIContent($"Stage {index}");
+
+                //Draw each field and give it a label
+                //EditorGUI.PropertyField(rect, listRE.serializedProperty.GetArrayElementAtIndex(index), objectLabel);
+                EditorGUILayout.PropertyField(listRE.serializedProperty.GetArrayElementAtIndex(index), objectLabel);
+            };
+        }
+    }
+
+    private void OnInspectorUpdate()
+    {
+        //Updates the editor window
+        Repaint();
+    }
+
     void OnGUI()
     {
         //Window Code
-        GUILayout.Space(10);
-        GUILayout.Label("Attach the world generation script", EditorStyles.boldLabel);
-        GUILayout.Space(10);
-        tool = EditorGUILayout.ObjectField(tool, typeof(WorldGeneration), true);// as Object;
-        GUILayout.Space(10);
-
-        GUILayout.Label("Choose desired generation stages", EditorStyles.boldLabel);
-        GUILayout.Space(10);
-
-        //TODO Look at the website tutorial on how to add a list to the custom window
-        //stages.Add();
-
-        foreach (Object obj in stages)
+        if(objectSO == null)
         {
-            stage = EditorGUILayout.ObjectField(obj, typeof(BaseGeneration), true);
-            tool.GetComponent<WorldGeneration>().SetStages(stage.GetComponent<BaseGeneration>());
+            EditorGUI.HelpBox(helpRect, helpText, MessageType.Warning);
+            return;
         }
-        //description = EditorGUILayout.TextField("Description", description);
+        else if(objectSO != null)
+        {
+            objectSO.Update();
+            listRE.DoList(listRect); 
+            objectSO.ApplyModifiedProperties(); //Adds to the script list
+        }
+
+        GUILayout.Space(10f);
+        GUILayout.Label("Choose desired generation stages");
+        //GUILayout.Space(listRE.GetHeight() + 10f);
+
+        GUILayout.Space(30f);
 
         //Generating and clearing the world
         GUILayout.Label("Generate a 2D tilemap world", EditorStyles.boldLabel);
         GUILayout.Space(10);
-        if (GUILayout.Button("Generate") && tool != null)
+        if (GUILayout.Button("Generate") && worldGen != null)
         {
             Debug.Log("Generating...");
 
-            tool.GetComponent<WorldGeneration>().Generate();
+            Generate();
         }
 
-        if (GUILayout.Button("Clear Generation") && tool != null)
+        GUILayout.Space(10f);
+
+        if (GUILayout.Button("Clear Generation") && worldGen != null)
         {
             Debug.Log("Cleaning...");
 
-            tool.GetComponent<WorldGeneration>().Clear();
+            Clear();
         }
+
+        GUILayout.Space(10f);
+
+        GUILayout.Label(isActive ? "World Generated!" : "World cleared!", EditorStyles.boldLabel);
+
+        //GUILayout.Space(10);
+        //GUILayout.Label("Attach the world generation script", EditorStyles.boldLabel);
+        //GUILayout.Space(10);
+        //tool = EditorGUILayout.ObjectField(tool, typeof(WorldGeneration), true);// as Object;
+        //GUILayout.Space(10);
+
+        //GUILayout.Label("Choose desired generation stages", EditorStyles.boldLabel);
+        //GUILayout.Space(10);
+    }
+
+    private void Generate()
+    {
+        isActive = true;
+
+        //foreach (var obj in worldGen.GetStages())
+        //{
+        //    //stage = EditorGUILayout.ObjectField(obj, typeof(BaseGeneration), true);
+
+        //    Debug.Log($"Stage : {obj.name}");
+
+        //    //worldGen.SetStages(obj);
+        //}
+
+        //if (listRE.list.Count > 0)
+            worldGen.Generate();
+        //else Debug.Log("Please add at least one stage to the list");
+    }
+
+    private void Clear()
+    {
+        isActive = false;
+
+        worldGen.Clear();
     }
 }
