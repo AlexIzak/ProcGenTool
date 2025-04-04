@@ -52,9 +52,10 @@ public class CustomEditorWindow : EditorWindow
             //EditorGUILayout.PropertyField(objectSO.FindProperty("stages"));
 
             //Drawing the list
+            
             listRE.drawHeaderCallback = (rect) => EditorGUI.LabelField(rect, "Stages");
-            listRE.displayAdd = true;
-            listRE.displayRemove = true;
+            //listRE.displayAdd = true;
+            //listRE.displayRemove = true;
             listRE.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
             {
                 rect.y += 5f;
@@ -86,7 +87,8 @@ public class CustomEditorWindow : EditorWindow
         else if(objectSO != null)
         {
             objectSO.Update();
-            listRE.DoList(listRect); 
+            //listRE.DoList(listRect);
+            listRE.DoLayoutList();
             objectSO.ApplyModifiedProperties(); //Adds to the script list
         }
 

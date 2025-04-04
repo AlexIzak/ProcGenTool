@@ -4965,8 +4965,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileGrid: {fileID: 279565603}
-  width: 360
-  height: 180
+  width: 400
+  height: 300
 --- !u!114 &1911324980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4981,10 +4981,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stages:
   - {fileID: 11400000, guid: 31fc5fc8ed3cc6a45ab0e509d7cb1599, type: 2}
+  - {fileID: 11400000, guid: cd2818b1f0b06534191781997d5eb1f9, type: 2}
+  - {fileID: 11400000, guid: d35329f515017094fa4385b779e294fd, type: 2}
   - {fileID: 11400000, guid: 3321f77bf7927e34ca9cbe9550ec7d38, type: 2}
-  - {fileID: 11400000, guid: 31fc5fc8ed3cc6a45ab0e509d7cb1599, type: 2}
-  - {fileID: 11400000, guid: 31fc5fc8ed3cc6a45ab0e509d7cb1599, type: 2}
-  - {fileID: 11400000, guid: 31fc5fc8ed3cc6a45ab0e509d7cb1599, type: 2}
+  - {fileID: 11400000, guid: 03db452a9f43aa4468f6dbc2e3cc7d5a, type: 2}
 --- !u!156049354 &1911324981
 Grid:
   m_ObjectHideFlags: 0

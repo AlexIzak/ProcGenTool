@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu(fileName = "OreGeneration", menuName = "Generation/Ores", order = 1)]
 public class OresSO : BaseGeneration
 {
+    [Range(1, 100)]
     public int maxClusterSize = 1;
 
     [Header("This curve controls the ore distribution along the depth of the map")]

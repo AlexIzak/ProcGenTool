@@ -35,16 +35,15 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.12219136
     - serializedVersion: 3
-      time: 0.9915612
-      value: -0.0023584366
-      inSlope: -1.5836998
-      outSlope: -1.5836998
+      time: 0.97907543
+      value: 0.97786325
+      inSlope: 0.8044884
+      outSlope: 0.8044884
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.10395258
+      inWeight: 0.32853034
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  decay: 0.17222227
   ore: {fileID: 11400000, guid: d649647235e0e7444b59c4a0cdd524ad, type: 2}

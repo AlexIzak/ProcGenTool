@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a4f246ab1ed979448157fe6070d535b, type: 3}
   m_Name: CaveGeneration
   m_EditorClassIdentifier: 
-  caveSize: 3
+  caveSize: 1
   caveMultiplier: 3
-  caveSmoothness: 6
+  caveSmoothness: 3
   hollow: {fileID: 11400000, guid: 48cfa2736d0bf6a4795938435512bdf4, type: 2}

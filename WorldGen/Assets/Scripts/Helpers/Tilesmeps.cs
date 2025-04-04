@@ -15,6 +15,18 @@ public class Tilesmeps : MonoBehaviour
     //[SerializeField]
     int altitude;
 
+    int maxWidth = 1600;
+    int maxHeight = 900;
+
+    private void Start()
+    {
+        if(width > maxWidth) 
+            width = maxWidth;
+
+        else if(height > maxHeight) 
+            height = maxHeight;
+    }
+
     //TODO Add a button that opens the editor window here
 
     /// <summary>
@@ -61,8 +73,20 @@ public class Tilesmeps : MonoBehaviour
         return false;
     }
 
-    public int GetWidth() { return width; }
-    public int GetHeight() { return height; }
+    public int GetWidth() 
+    {
+        if(width > maxWidth)
+            width = maxWidth;
+
+        return width; 
+    }
+    public int GetHeight() 
+    {
+        if (height > maxHeight) 
+            height = maxHeight;
+
+        return height;
+    }
     public int GetAltitude() { return altitude; }
     public int GetSurfaceMaxHeight()
     {
