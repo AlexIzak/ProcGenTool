@@ -7,7 +7,8 @@ public class WorldGeneration : MonoBehaviour
 {
     Tilesmeps world;
 
-    [SerializeField]
+    //[SerializeField]
+    [HideInInspector]
     public List<BaseGeneration> stages = new List<BaseGeneration>();
 
     //TODO Add another SO as a container for all the stages so I can have the other ones for testing
@@ -22,6 +23,8 @@ public class WorldGeneration : MonoBehaviour
             stage.Generate(world);
         }
     }
+
+    
 
     // Update is called once per frame
     void Update()
@@ -53,12 +56,18 @@ public class WorldGeneration : MonoBehaviour
 
         foreach (var stage in stages)
         {
-            stage.Generate(world);
+            if (stage == null)
+                Debug.LogWarning("Please add a valid stage to the list");
+            else
+                stage.Generate(world);
         }
     }
 
     public void Clear()
     {
-        world.tileGrid.ClearAllTiles();
+        if (world.tileGrid)
+            world.tileGrid.ClearAllTiles();
+        else if(world.tileGrid == null)
+            Debug.LogWarning("Nothing to clear, please generate a world first");
     }
 }

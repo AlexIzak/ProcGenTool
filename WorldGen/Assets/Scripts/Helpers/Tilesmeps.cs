@@ -6,11 +6,13 @@ using UnityEngine.Tilemaps;
 public class Tilesmeps : MonoBehaviour
 {
     //This class stores and edits the tilemap
-    [SerializeField]
+    //[SerializeField]
+    [HideInInspector]
     public Tilemap tileGrid;
 
-    [SerializeField]
-    private int width, height;
+    //[SerializeField]
+    [HideInInspector]
+    public int width, height;
 
     //[SerializeField]
     int altitude;
