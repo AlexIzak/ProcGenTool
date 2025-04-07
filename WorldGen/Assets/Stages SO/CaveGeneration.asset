@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   caveSize: 3
   caveMultiplier: 4
-  caveSmoothness: 5
+  caveSmoothness: 2
   hollow: {fileID: 11400000, guid: 48cfa2736d0bf6a4795938435512bdf4, type: 2}

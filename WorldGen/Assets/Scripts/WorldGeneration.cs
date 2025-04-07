@@ -65,7 +65,7 @@ public class WorldGeneration : MonoBehaviour
 
     public void Clear()
     {
-        if (world.tileGrid)
+        if (world.tileGrid != null)
             world.tileGrid.ClearAllTiles();
         else if(world.tileGrid == null)
             Debug.LogWarning("Nothing to clear, please generate a world first");

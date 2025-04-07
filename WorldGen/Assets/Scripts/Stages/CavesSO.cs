@@ -52,7 +52,7 @@ public class CavesSO : BaseGeneration
             int yPos = UnityEngine.Random.Range(10, world.GetHeight() - caveHeight);
             Vector2 caveOrigin = new Vector2(xPos, yPos);
 
-            if(caveSize > 1)
+            if(caveSize > 1 && caveWidth > i + 5 && caveHeight > i + 5)
             {
                 //Making each cave increasingly smaller
                 caveWidth -= i;
