@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class WorldGeneration : MonoBehaviour
@@ -62,9 +60,27 @@ public class WorldGeneration : MonoBehaviour
 
     public void Clear()
     {
+        if(world == null)
+        {
+            world = GetComponent<MyTilemap>();
+            ClearTiles();
+        }
+        else
+        {
+            ClearTiles();
+        }
+    }
+
+    private void ClearTiles()
+    {
         if (world.tileGrid != null)
+        {
             world.tileGrid.ClearAllTiles();
-        else if(world.tileGrid == null)
+            Debug.Log("Cleaning...");
+        }
+        else if (world.tileGrid == null)
+        {
             Debug.LogWarning("Nothing to clear, please generate a world first");
+        }
     }
 }

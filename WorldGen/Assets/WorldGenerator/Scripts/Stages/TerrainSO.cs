@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Tilemaps;
+
 
 [CreateAssetMenu(fileName = "TerrainGeneration", menuName = "Generation/Terrain", order = -1)]
 public class TerrainSO : BaseGeneration

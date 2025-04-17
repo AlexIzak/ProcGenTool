@@ -1,10 +1,7 @@
 using UnityEngine;
 using UnityEditor;
-//using Unity.VisualScripting;
-//using System.Collections.Generic;
 using UnityEditorInternal;
-//using System;
-//using System.Reflection;
+
 
 public class CustomEditorWindow : EditorWindow
 {
@@ -42,6 +39,14 @@ public class CustomEditorWindow : EditorWindow
 
     private void OnEnable()
     {
+        if (listRE == null || worldGen == null)
+            Init();
+        else
+            return;
+    }
+
+    private void Init()
+    {
         worldGen = FindFirstObjectByType<WorldGeneration>();
         tiles = FindFirstObjectByType<MyTilemap>();
 
@@ -69,13 +74,17 @@ public class CustomEditorWindow : EditorWindow
 
         if (tiles)
             serializedTiles = new SerializedObject(tiles);
-
     }
 
     private void OnInspectorUpdate()
     {
         //Updates the editor window
         Repaint();
+    }
+
+    private void OnFocus()
+    {
+        OnEnable();
     }
 
     void OnGUI()
@@ -164,7 +173,6 @@ public class CustomEditorWindow : EditorWindow
     private void Clear()
     {
         isActive = false;
-        Debug.Log("Cleaning...");
         worldGen.Clear();
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(fileName = "OreGeneration", menuName = "Generation/Ores", order = 1)]
 public class OresSO : BaseGeneration
