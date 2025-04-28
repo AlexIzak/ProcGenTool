@@ -16,7 +16,7 @@ Once imported, add a rectangular tilemap to your scene as usual and add the 'Wor
 Now navigate to the Window menu where you should see a 'World Generator' window. 
 Open it and add the Tilemap object you just made, a width and height, as well as the desired generation stages you want.
 
-The package includes some existing stages and tiles, but you can make and customize your own if you so wish. To do so, you need to:
+The package includes some existing stages and tiles, but you can make and customize your own if you so wish. You can find existing stages in the 'Stages SO' folder and tiles are in 'Tilemap - Tiles'. To do so, you need to:
 
 Right click in your content window, go to 'Create' -> 'Generation' for generation stages or 'Tile' for custom tiles. The stages and tiles can be customized inside the inspector.
 
